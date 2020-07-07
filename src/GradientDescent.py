@@ -36,35 +36,3 @@ class GradientDescent:
             b_approx = self.f(*altered_guess)
             result.append(f_approx - b_approx)
         return [g / (2*delta) for g in result]
-
-
-def f(x, y):
-    return 1 + (x-1)**2 + (y+5)**2
-
-
-minimizer = GradientDescent(f)
-print(minimizer.minimum)
-minimizer.grid_search([-4, -2, 0, -2, 4], [-4, -2, 0, -2, 4])
-print(minimizer.minimum)
-print(minimizer.compute_gradient(delta=0.01))
-minimizer.descend(scaling_factor=0.001, delta=0.01, num_steps=4, logging=True)
-print(minimizer.minimum)
-
-
-data = [(0, 1), (1, 2), (2, 4), (3, 10)]
-
-
-def sum_squared_error(beta_0, beta_1, beta_2):
-    squared_errors = []
-    for (x, y) in data:
-        estimation = beta_0 + beta_1*x + beta_2*(x**2)
-        error = estimation - y
-        squared_errors.append(error**2)
-    return sum(squared_errors)
-
-
-minimizer = GradientDescent(sum_squared_error)
-minimizer.descend(scaling_factor=0.001, delta=0.01,
-                  num_steps=100, logging=True)
-print(minimizer.minimum)
-print(sum_squared_error(*minimizer.minimum))

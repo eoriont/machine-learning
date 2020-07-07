@@ -40,16 +40,3 @@ class PolynomialRegressor:
                                       coef in enumerate(self.coefficients)))
         plt.plot(x_data, y, zorder=1)
         plt.show()
-
-
-quadratic_regressor = PolynomialRegressor(degree=2)
-print(quadratic_regressor.coefficients)
-print(quadratic_regressor.evaluate(5))
-data = [(0, 1), (1, 2), (2, 4), (3, 10)]
-quadratic_regressor.ingest_data(data)
-print(quadratic_regressor.data)
-print(quadratic_regressor.sum_squared_error())
-quadratic_regressor.solve_coefficients()
-print(quadratic_regressor.coefficients)
-print(quadratic_regressor.sum_squared_error())
-quadratic_regressor.plot()
