@@ -35,4 +35,4 @@ class GradientDescent:
             altered_guess[i] -= 2*delta
             b_approx = self.f(*altered_guess)
             result.append(f_approx - b_approx)
-        return [g / (2*delta) for g in result]
+        return tuple(g / (2*delta) for g in result)
