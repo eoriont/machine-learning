@@ -1,7 +1,7 @@
 import sys
 sys.path.append('src')
 try:
-    from GradientDescent import GradientDescent
+    from gradient_descent import GradientDescent
 except ImportError as err:
     print(err)
 
