@@ -9,11 +9,12 @@ class GradientDescent:
         min_pos = self.minimum
         min_err = float('inf')
         for pos in param_combos:
+            # You would apply gradient descent here
             err = self.f(*pos)
             if err < min_err:
                 min_err = err
                 min_pos = pos
-        self.minimum = min_pos
+        self.minimum = tuple(min_pos)
 
     def descend(self, scaling_factor=0.01, delta=0.01, num_steps=50, logging=False):
         old_min = self.minimum
