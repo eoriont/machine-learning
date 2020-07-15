@@ -27,6 +27,9 @@ class PolynomialRegressor:
         inv = mul.inverse()
         result = inv @ (x_mat_t @ y_mat)
         self.coefficients = result[:, 0]
+        if type(self.coefficients) != list:
+            self.coefficients = [self.coefficients]
+        print(self.coefficients)
 
     def plot(self):
         x_data, y_data = zip(*self.data)

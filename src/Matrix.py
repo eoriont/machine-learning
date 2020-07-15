@@ -194,6 +194,8 @@ class Matrix:
     # Divides a row by its first non zero entry
     def scale_row(self, row_idx):
         row = self[row_idx, :]
+        if type(row) != list:
+            row = [row]
         _, divisor = Matrix.get_first_non_zero_entry(row)
         row = [i/divisor for i in row]
         return row, divisor
@@ -265,7 +267,6 @@ class Matrix:
             new_mat = new_mat.clear_below(i)
         for j in range(new_mat.shape[0]-1, 0, -1):
             new_mat = new_mat.clear_above(j)
-
         if return_determinant:
             return divisors_product
         return new_mat
@@ -284,7 +285,7 @@ class Matrix:
         new_mat[:, :size] = self.elements
         new_mat[:, size:] = Matrix(shape=(size, size), fill="diag").elements
         new_mat = new_mat.rref()
-        return Matrix(new_mat[:, size:])
+        return Matrix(Matrix.format_matrix_array(new_mat[:, size:]))
 
     # Solve Ax = b
     def solve(self, column_vector):
