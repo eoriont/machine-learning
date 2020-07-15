@@ -5,7 +5,8 @@ try:
 except ImportError as err:
     print(err)
 
-data = [(1, 3.1), (2, 10.17)]
+data = [(1, 3.1), (2, 10.17), (3, 20.93), (4, 38.71), (5, 60.91),
+        (6, 98.87), (7, 113.92), (8, 146.95), (9, 190.09), (10, 232.65)]
 
 regressor = PolynomialRegressor(2)
 regressor.ingest_data(data)
