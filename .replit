@@ -1,0 +1,3 @@
+language = "bash"
+test = "python src/main.py"
+run = "python tests/test_polynomial_regressor.py"
