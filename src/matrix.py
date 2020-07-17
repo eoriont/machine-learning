@@ -222,8 +222,9 @@ class Matrix:
     def clear_rows(self, clear_row_idx, rows_to_clear, clear_row_offset):
         col_idx, divisor = Matrix.get_first_non_zero_entry(
             self.elements[clear_row_idx])
+        # If pivot is gone, do nothing
         if None in [col_idx, divisor]:
-            return
+            return self
         new_mat = self.copy()
         clear_row = new_mat.elements[clear_row_idx]
 
@@ -250,6 +251,9 @@ class Matrix:
     # If return_determinant is true, this function will return the
     # determinant of self
     def rref(self, return_determinant=False):
+        if not self.is_square() and return_determinant:
+            raise Exception(
+                "Error: Can't find the shape of a non square matrix!")
         new_mat = self.copy()
         divisors_product = 1
         for i in range(new_mat.shape[0]):
