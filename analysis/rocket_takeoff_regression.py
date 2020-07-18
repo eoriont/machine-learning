@@ -19,10 +19,13 @@ cubic_regressor.ingest_data(data)
 cubic_regressor.solve_coefficients()
 cubic_prediction = cubic_regressor.evaluate(200)
 
+print("Quadratic Coefficients:", regressor.coefficients)
 print("Quadratic Regression:", prediction)
+print("Cubic Coefficients:", cubic_regressor.coefficients)
 print("Cubic Regression:", cubic_prediction)
 
-# The Cubic Regression is going to be a more accurate answer than the
-# Quadratic Regression because the cubic function is able to fit more
-# lines than lower degree lines, and higher degree lines like quartic
-# Can fit the line even better than the cubic
+# For this situation, the quadratic model is actually better than the
+# cubic model, because the cubic model becomes negative after enough
+# time. In general though, the cubic should fit the lines better
+# because of the increased amount of coefficients which allow for more
+# detail.
