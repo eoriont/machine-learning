@@ -1,24 +1,10 @@
+from otest import do_assert, assert_exception
 import sys
 sys.path.append('src')
 try:
     from matrix import Matrix
 except ImportError as err:
     print(err)
-
-
-def do_assert(test_name, output, expected):
-    assert output == expected, f"Test {test_name} failed: output {output} expected to be {expected}"
-    print(f"Test {test_name} PASSED!")
-
-
-def assert_exception(test_name, func, *args):
-    try:
-        func(*args)
-    except Exception:
-        print(f"Test {test_name} PASSED!")
-        return
-    raise Exception(
-        f"Test {test_name} failed because it didn't throw an exception!")
 
 
 # ARITHMETIC TESTS

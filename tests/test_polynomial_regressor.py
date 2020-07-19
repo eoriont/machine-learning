@@ -1,3 +1,4 @@
+from otest import do_assert
 import sys
 sys.path.append('src')
 try:
@@ -25,11 +26,6 @@ tests = [{'deg': 0, 'coefs': [11.333333333333332], 'eval': 11.333333333333332},
          {'deg': 5, 'coefs': [0.9999999917480108, -2.950000002085698, 6.9583333345161265, -3.9583333337779045, 1.0416666667658463, -0.09166666667401097], 'eval': 4.999999990103076}]
 
 
-def do_assert(test_name, output, expected):
-    assert output == expected, f"Test {test_name} failed: output {output} expected to be {expected}"
-    print(f"Test {test_name} PASSED!")
-
-
 for test in tests:
     deg = test['deg']
     regressor = PolynomialRegressor(degree=deg)
@@ -42,4 +38,4 @@ for test in tests:
     do_assert(test_name, round_down(regressor.evaluate(2)),
               round_down(test['eval']))
 
-print("All tests passed")
+print("All tests passed!")

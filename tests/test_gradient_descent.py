@@ -1,3 +1,4 @@
+from otest import do_assert
 import sys
 sys.path.append('src')
 try:
@@ -47,15 +48,15 @@ for test in tests:
     i = test['num_inputs']
     minimizer = GradientDescent(test['f'])
     grad = minimizer.compute_gradient(delta=0.01)
-    assert round_down(grad) == round_down(
-        test['gradient_out']), f"Compute Gradient broke on {i} inputs {grad} should be equal to {test['gradient_out']}"
+    do_assert(f"compute gradient {i} inputs", round_down(
+        grad), round_down(test['gradient_out']))
     minimizer.descend(scaling_factor=0.001, delta=0.01,
                       num_steps=1, logging=False)
-    assert round_down(minimizer.minimum) == round_down(test[
-        'descent']), f"Gradient Descent broke on {i} inputs {minimizer.minimum} should be equal to {test['descent']}"
+    do_assert(f"gradient descent {i} inputs", round_down(
+        minimizer.minimum), round_down(test['descent']))
 
     minimizer.grid_search(*test['gs_in'])
-    assert round_down(minimizer.minimum) == round_down(
-        test['gs_out']), f"Grid search broke on {i} inputs, {minimizer.minimum} should be equal to {test['gs_out']}"
+    do_assert(f"grid search {i} inputs", round_down(
+        minimizer.minimum), round_down(test['gs_out']))
 
 print("All tests passed!")
