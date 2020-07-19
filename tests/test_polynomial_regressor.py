@@ -4,7 +4,7 @@ sys.path.append('src')
 try:
     from polynomial_regressor import PolynomialRegressor
 except ImportError as err:
-    print(err)
+    raise err
 
 
 def round_down(t, precision=6):
