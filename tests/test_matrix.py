@@ -87,4 +87,23 @@ assert_exception("recursive determinant 5x3", m3.recursive_determinant)
 assert_exception("inverse 5x3", m3.inverse)
 assert_exception("inverse by minors 5x3", m3.inverse_by_minors)
 
+m = Matrix([[1, 2, 3, 4],
+            [5, 0, 6, 0],
+            [0, 7, 0, 8],
+            [9, 0, 0, 10]])
+should_be_identity = (
+    m@m.inverse()).element_operation(lambda x, _: round(x, 6))
+do_assert("4x4 matrix * inverse == identity",
+          should_be_identity, Matrix(shape=(4, 4), fill="diag"))
+
+m = Matrix([[1.2, 5.3, 8.9, -10.3, -15],
+            [3.14, 0, -6.28, 0, 2.71],
+            [0, 1, 1, 2, 3],
+            [5, 8, 13, 21, 34],
+            [1, 0, 0.5, 0, 0.1]])
+should_be_identity = (
+    m@m.inverse()).element_operation(lambda x, _: round(x, 6))
+do_assert("5x5 matrix * inverse == identity",
+          should_be_identity, Matrix(shape=(5, 5), fill="diag"))
+
 print("All tests passed!")
