@@ -1,6 +1,6 @@
 from matrix import Matrix
-# import matplotlib.pyplot as plt
-# from matplotlib.ticker import MultipleLocator
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 
 
 class PolynomialRegressor:
@@ -30,15 +30,15 @@ class PolynomialRegressor:
         if type(self.coefficients) != list:
             self.coefficients = [self.coefficients]
 
-    # def plot(self):
-    #     x_data, y_data = zip(*self.data)
-    #     y = [self.evaluate(x) for x in x_data]
-    #     plt.scatter(x_data, y_data, zorder=2, color='black')
-    #     x_max, y_max = 20, 20
-    #     plt.xlim(-0.5, x_max-0.5)
-    #     plt.ylim(-0.5, y_max-0.5)
-    #     plt.grid(which='minor')
-    #     plt.title("y = " + ' + '.join(f"{round(coef, 5)}x^{i}" for i,
-    #                                   coef in enumerate(self.coefficients)))
-    #     plt.plot(x_data, y, zorder=1)
-    #     plt.show()
+    def plot(self):
+        x_data, y_data = zip(*self.data)
+        y = [self.evaluate(x) for x in x_data]
+        plt.scatter(x_data, y_data, zorder=2, color='black')
+        x_max, y_max = 20, 20
+        plt.xlim(-0.5, x_max-0.5)
+        plt.ylim(-0.5, y_max-0.5)
+        plt.grid(which='minor')
+        plt.title("y = " + ' + '.join(f"{round(coef, 5)}x^{i}" for i,
+                                      coef in enumerate(self.coefficients)))
+        plt.plot(x_data, y, zorder=1)
+        plt.show()

@@ -1,9 +1,3 @@
-# FOR WHOEVER IS REVIEWING:
-# When you run tests, there will be an error!
-# Something along the lines of "module otest was not found"
-# You have to install it to run the tests:
-# In the console, type: `pip install otest-oriont`
-# Then you can run the tests
 language = "bash"
 test = "python src/main.py"
 run = "python tests/test.py"
