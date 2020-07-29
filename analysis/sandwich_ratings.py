@@ -13,8 +13,8 @@ except ImportError as e:
 #   1 * beta_0 + 6 * beta_1 + 0 * beta_2 = 9
 #   1 * beta_0 + 0 * beta_1 + 2 * beta_2 = 2
 #   1 * beta_0 + 0 * beta_1 + 4 * beta_2 = 5
-#   1 * beta_0 + 0 * beta_1 + 6 * beta_2 = 6
-#   1 * beta_0 + 0 * beta_1 + 8 * beta_2 = 7
+#   1 * beta_0 + 0 * beta_1 + 6 * beta_2 = 7
+#   1 * beta_0 + 0 * beta_1 + 8 * beta_2 = 6
 
 #   [[1, 0, 0],                   [[1],
 #    [1, 1, 0],                    [2],
@@ -23,14 +23,14 @@ except ImportError as e:
 #    [1, 6, 0],     [beta_1],  =   [9],
 #    [1, 0, 2],     [beta_2]]      [2],
 #    [1, 0, 4],                    [5],
-#    [1, 0, 6],                    [6],
-#    [1, 0, 8]]                    [7]]
+#    [1, 0, 6],                    [7],
+#    [1, 0, 8]]                    [6]]
 
 #   rating = beta_0 + beta_1 * (slices of beef) + beta_2 * (tbsp peanut butter)
 
 X = Matrix([[1, 0, 0], [1, 1, 0], [1, 2, 0], [1, 4, 0], [
            1, 6, 0], [1, 0, 2], [1, 0, 4], [1, 0, 6], [1, 0, 8]])
-y = Matrix([[1], [2], [4], [8], [9], [2], [5], [6], [7]])
+y = Matrix([[1], [2], [4], [8], [9], [2], [5], [7], [6]])
 betas = (X.transpose() @ X).inverse() @ (X.transpose() @ y)
 betas = betas.transpose().elements[0]
 print("Betas 0, 1, and 2 respectively:", betas)
