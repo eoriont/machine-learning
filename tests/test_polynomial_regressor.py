@@ -31,11 +31,9 @@ for test in tests:
     regressor = PolynomialRegressor(degree=deg)
     regressor.ingest_data(data)
     regressor.solve_coefficients()
-    test_name = f"solve_coefficients degree = {deg}"
-    do_assert(test_name, round_down(regressor.coefficients),
+    do_assert(f"solve_coefficients degree = {deg}", round_down(regressor.coefficients),
               round_down(test['coefs']))
-    test_name = f"evaluate degree = {deg}"
-    do_assert(test_name, round_down(regressor.evaluate(2)),
+    do_assert(f"evaluate degree = {deg}", round_down(regressor.evaluate(2)),
               round_down(test['eval']))
 
 print("All tests passed!")

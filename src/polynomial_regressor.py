@@ -18,14 +18,19 @@ class PolynomialRegressor:
         return sum((self.evaluate(x)-y)**2 for x, y in self.data)
 
     def solve_coefficients(self):
-        x_data, y_data = [list(t) for t in zip(*self.data)]
-        x_elems = [[t**i for i in range(0, self.degree+1)] for t in x_data]
-        x_mat = Matrix(x_elems)
-        y_mat = Matrix([y_data]).transpose()
-        x_mat_t = x_mat.transpose()
-        mul = x_mat_t @ x_mat
-        inv = mul.inverse()
-        result = inv @ (x_mat_t @ y_mat)
+        x_data = [list(t) for t in zip(*self.data)]
+        y_data = [x_data.pop()]
+        X, y = Matrix(x_data).transpose(), Matrix(y_data).transpose()
+
+        result = (X.transpose() @ X).inverse() @ (X.transpose() @ y)
+        # x_data, y_data = [list(t) for t in zip(*self.data)]
+        # x_elems = [[t**i for i in range(0, self.degree+1)] for t in x_data]
+        # x_mat = Matrix(x_elems)
+        # y_mat = Matrix([y_data]).transpose()
+        # x_mat_t = x_mat.transpose()
+        # mul = x_mat_t @ x_mat
+        # inv = mul.inverse()
+        # result = inv @ (x_mat_t @ y_mat)
         self.coefficients = result[:, 0]
         if type(self.coefficients) != list:
             self.coefficients = [self.coefficients]
