@@ -136,7 +136,7 @@ class Matrix:
 
     # Reflect self over its main diagonal
     def transpose(self):
-        return Matrix([arr for arr in zip(*self.elements)])
+        return Matrix([list(arr) for arr in zip(*self.elements)])
 
     # Check if the lists of elements in each matrix are the same
     def is_equal(self, mat2):

@@ -4,12 +4,12 @@ from matplotlib.ticker import MultipleLocator
 
 
 class PolynomialRegressor:
-    def __init__(self, degree):
+    def __init__(self, degree, y_function=None):
         self.degree = degree
-        self.coefficients = [0] * degree
+        self.y_function = (lambda x: x) if y_function is None else y_function
 
     def evaluate(self, x):
-        return sum(self.coefficients[i] * x**i for i in range(len(self.coefficients)))
+        return sum(self.coefficients[i] * x**i for i in range(self.degree))
 
     def ingest_data(self, data):
         self.data = data
@@ -20,17 +20,11 @@ class PolynomialRegressor:
     def solve_coefficients(self):
         x_data = [list(t) for t in zip(*self.data)]
         y_data = [x_data.pop()]
-        X, y = Matrix(x_data).transpose(), Matrix(y_data).transpose()
+        X, y = Matrix(x_data).transpose(), Matrix(
+            y_data).transpose().element_operation(self.y_function)
 
         result = (X.transpose() @ X).inverse() @ (X.transpose() @ y)
-        # x_data, y_data = [list(t) for t in zip(*self.data)]
-        # x_elems = [[t**i for i in range(0, self.degree+1)] for t in x_data]
-        # x_mat = Matrix(x_elems)
-        # y_mat = Matrix([y_data]).transpose()
-        # x_mat_t = x_mat.transpose()
-        # mul = x_mat_t @ x_mat
-        # inv = mul.inverse()
-        # result = inv @ (x_mat_t @ y_mat)
+
         self.coefficients = result[:, 0]
         if type(self.coefficients) != list:
             self.coefficients = [self.coefficients]
