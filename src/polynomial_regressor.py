@@ -1,6 +1,7 @@
 from matrix import Matrix
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
+import math
 
 
 class PolynomialRegressor:
@@ -22,7 +23,6 @@ class PolynomialRegressor:
         y_data = [x_data.pop()]
         X, y = Matrix(x_data).transpose(), Matrix(
             y_data).transpose().element_operation(self.y_function)
-
         result = (X.transpose() @ X).inverse() @ (X.transpose() @ y)
 
         self.coefficients = result[:, 0]
