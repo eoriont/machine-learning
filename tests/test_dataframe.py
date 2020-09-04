@@ -29,3 +29,22 @@ do_assert("expected array #2", df2.to_array(), [[3, 1],
                                                 [0, 0]])
 
 do_assert("columns #2", df2.columns, ['Sara', 'Pete'])
+# =========================
+# 38-2
+
+
+data_dict = {
+    'Pete': [1, 0, 1, 0],
+    'John': [2, 1, 0, 2],
+    'Sarah': [3, 1, 4, 0]
+}
+
+df1 = DataFrame(data_dict, column_order=['Pete', 'John', 'Sarah'])
+df2 = df1.append_pairwise_interactions()
+do_assert("pairwise_interactions columns", df2.columns, [
+          'Pete', 'John', 'Sarah', 'John_Pete', 'Sarah_Pete', 'Sarah_John'])
+
+do_assert("pairwise_interactions array", df2.to_array(), [[1, 2, 3, 2, 3, 6],
+                                                          [0, 1, 1, 0, 0, 1],
+                                                          [1, 0, 4, 0, 4, 0],
+                                                          [0, 2, 0, 0, 0, 0]])
