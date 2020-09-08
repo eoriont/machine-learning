@@ -42,7 +42,7 @@ data_dict = {
 df1 = DataFrame(data_dict, column_order=['Pete', 'John', 'Sarah'])
 df2 = df1.append_pairwise_interactions()
 do_assert("pairwise_interactions columns", df2.columns, [
-          'Pete', 'John', 'Sarah', 'John_Pete', 'Sarah_Pete', 'Sarah_John'])
+          'Pete', 'John', 'Sarah', 'Pete_John', 'Pete_Sarah', 'John_Sarah'])
 
 do_assert("pairwise_interactions array", df2.to_array(), [[1, 2, 3, 2, 3, 6],
                                                           [0, 1, 1, 0, 0, 1],
