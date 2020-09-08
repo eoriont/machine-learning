@@ -48,3 +48,37 @@ do_assert("pairwise_interactions array", df2.to_array(), [[1, 2, 3, 2, 3, 6],
                                                           [0, 1, 1, 0, 0, 1],
                                                           [1, 0, 4, 0, 4, 0],
                                                           [0, 2, 0, 0, 0, 0]])
+
+data_dict = {
+    'id': [1, 2, 3, 4],
+    'color': ['blue', 'yellow', 'green', 'yellow']
+}
+
+df1 = DataFrame(data_dict, column_order=['id', 'color'])
+df2 = df1.create_all_dummy_variables()
+do_assert("create dummy variables", df2.columns,
+          ['id', 'color_blue', 'color_yellow', 'color_green'])
+do_assert("create dummy variables data", df2.to_array(),
+          [[1, 1, 0, 0],
+           [2, 0, 1, 0],
+           [3, 0, 0, 1],
+           [4, 0, 1, 0]])
+df3 = df2.remove_columns(['id', 'color_yellow'])
+do_assert("remove columns cols", df3.columns,
+          ['color_blue', 'color_green'])
+do_assert("remove columns data", df3.to_array(),
+          [[1, 0],
+           [0, 0],
+           [0, 1],
+           [0, 0]])
+df4 = df3.append_columns({
+    'name': ['Anna', 'Bill', 'Cayden', 'Daphnie'],
+    'letter': ['a', 'b', 'c', 'd']
+})
+do_assert("append columns cols", df4.columns,
+          ['color_blue', 'color_green', 'name', 'letter'])
+do_assert("append columns data", df4.to_array(),
+          [[1, 0, 'Anna', 'a'],
+           [0, 0, 'Bill', 'b'],
+           [0, 1, 'Cayden', 'c'],
+           [0, 0, 'Daphnie', 'd']])
