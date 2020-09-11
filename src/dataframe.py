@@ -1,9 +1,8 @@
 class DataFrame:
     def __init__(self, data_dict, column_order=None):
         self.data_dict = data_dict
-        column_order = column_order if column_order is not None else list(
-            data_dict.keys())
-        self.columns = column_order
+        self.columns = list(
+            data_dict) if column_order is None else column_order
 
     def to_array(self):
         arrs = [self.data_dict[col] for col in self.columns]
@@ -34,12 +33,16 @@ class DataFrame:
     def create_all_dummy_variables(self):
         categorical_cols = [col for col in self.data_dict if any(
             isinstance(i, str) for i in self.data_dict[col])]
+        list_categorical_cols = [col for col in self.data_dict if any(
+            isinstance(i, list) for i in self.data_dict[col])]
         df = self
         for col in categorical_cols:
-            df = df.create_dummy_variables(col)
+            df = df.create_string_dummy_variables(col)
+        for col in list_categorical_cols:
+            df = df.create_list_dummy_variables(col)
         return df
 
-    def create_dummy_variables(self, col):
+    def create_string_dummy_variables(self, col):
         d, c = self.get_data_copies()
         col_data = []
         [col_data.append(i) for i in d[col] if i not in col_data]
@@ -53,6 +56,24 @@ class DataFrame:
         c += new_cols
         return DataFrame(d, c)
 
+    def create_list_dummy_variables(self, col):
+        d, c = self.get_data_copies()
+        col_data = []
+        for arr in d[col]:
+            for x in arr:
+                if x not in col_data:
+                    col_data.append(x)
+        # print("list dummy vars", col_data)
+        new_data = [[(1 if item in arr else 0) for arr in d[col]]
+                    for item in col_data]
+        # print("list dummy vars", new_data)
+        new_cols_data = dict(zip(col_data, new_data))
+        del d[col]
+        d.update(new_cols_data)
+        c.remove(col)
+        c += col_data
+        return DataFrame(d, c)
+
     def remove_columns(self, cols):
         d, c = self.get_data_copies()
         for col in cols:
@@ -60,28 +81,12 @@ class DataFrame:
             del d[col]
         return DataFrame(d, c)
 
-    def append_columns(self, data_dict):
+    def append_columns(self, data_dict, column_order=None):
         d, c = self.get_data_copies()
         d.update(data_dict)
-        c += list(data_dict)
+        c += list(data_dict) if column_order is None else column_order
         return DataFrame(d, c)
 
 
 if __name__ == "__main__":
-    data_dict = {
-        'id': [1, 2, 3, 4],
-        'color': ['blue', 'yellow', 'green', 'yellow']
-    }
-
-    df1 = DataFrame(data_dict, column_order=['id', 'color'])
-    df2 = df1.create_all_dummy_variables()
-
-    df3 = df2.remove_columns(['id', 'color_yellow'])
-    print(df3.columns)
-    print(df3.to_array())
-    df4 = df3.append_columns({
-        'name': ['Anna', 'Bill', 'Cayden', 'Daphnie'],
-        'letter': ['a', 'b', 'c', 'd']
-    })
-    print(df4.columns)
-    print(df4.to_array())
+    print("Hello")

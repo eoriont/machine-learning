@@ -1,7 +1,7 @@
 import sys
 sys.path.append("src")
 try:
-    from otest import do_assert
+    from otest import do_assert, color_print
     from dataframe import DataFrame
 except ImportError as e:
     print(e)
@@ -82,3 +82,114 @@ do_assert("append columns data", df4.to_array(),
            [0, 0, 'Bill', 'b'],
            [0, 1, 'Cayden', 'c'],
            [0, 0, 'Daphnie', 'd']])
+# !
+color_print("Onto new tests... (Assignment 40-2)", "Cyan")
+data_dict = {
+    'beef': [0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 5, 5, 5, 5],
+    'pb': [0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5],
+    'condiments': [[], ['mayo'], ['jelly'], ['mayo', 'jelly'],
+                   [], ['mayo'], ['jelly'], ['mayo', 'jelly'],
+                   [], ['mayo'], ['jelly'], ['mayo', 'jelly'],
+                   [], ['mayo'], ['jelly'], ['mayo', 'jelly']],
+    'rating': [1, 1, 4, 0, 4, 8, 1, 0, 5, 0, 9, 0, 0, 0, 0, 0]
+}
+df = DataFrame(data_dict, column_order=['beef', 'pb', 'condiments'])
+do_assert("columns", df.columns, ['beef', 'pb', 'condiments'])
+do_assert("matrix", df.to_array(),    [[0,  0,  []],
+                                       [0,  0,  ['mayo']],
+                                       [0,  0,  ['jelly']],
+                                       [0,  0,  ['mayo', 'jelly']],
+                                       [5,  0,  []],
+                                       [5,  0,  ['mayo']],
+                                       [5,  0,  ['jelly']],
+                                       [5,  0,  ['mayo', 'jelly']],
+                                       [0,  5,  []],
+                                       [0,  5,  ['mayo']],
+                                       [0,  5,  ['jelly']],
+                                       [0,  5,  ['mayo', 'jelly']],
+                                       [5,  5,  []],
+                                       [5,  5,  ['mayo']],
+                                       [5,  5,  ['jelly']],
+                                       [5,  5,  ['mayo', 'jelly']]])
+
+df = df.create_all_dummy_variables()
+do_assert("dummy vars columns", df.columns, ['beef', 'pb', 'mayo', 'jelly'])
+do_assert("dummy vars matrix", df.to_array(),   [[0,  0,  0,  0],
+                                                 [0,  0,  1,  0],
+                                                 [0,  0,  0,  1],
+                                                 [0,  0,  1,  1],
+                                                 [5,  0,  0,  0],
+                                                 [5,  0,  1,  0],
+                                                 [5,  0,  0,  1],
+                                                 [5,  0,  1,  1],
+                                                 [0,  5,  0,  0],
+                                                 [0,  5,  1,  0],
+                                                 [0,  5,  0,  1],
+                                                 [0,  5,  1,  1],
+                                                 [5,  5,  0,  0],
+                                                 [5,  5,  1,  0],
+                                                 [5,  5,  0,  1],
+                                                 [5,  5,  1,  1]])
+
+df = df.append_pairwise_interactions()
+do_assert("pairwise interactions cols", df.columns, ['beef', 'pb', 'mayo', 'jelly',
+                                                     'beef_pb', 'beef_mayo', 'beef_jelly',
+                                                     'pb_mayo', 'pb_jelly',
+                                                     'mayo_jelly'])
+do_assert("pairwise interactions matrix", df.to_array(),
+          [[0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+           [0,  0,  1,  0,  0,  0,  0,  0,  0,  0],
+           [0,  0,  0,  1,  0,  0,  0,  0,  0,  0],
+           [0,  0,  1,  1,  0,  0,  0,  0,  0,  1],
+           [5,  0,  0,  0,  0,  0,  0,  0,  0,  0],
+           [5,  0,  1,  0,  0,  5,  0,  0,  0,  0],
+           [5,  0,  0,  1,  0,  0,  5,  0,  0,  0],
+           [5,  0,  1,  1,  0,  5,  5,  0,  0,  1],
+           [0,  5,  0,  0,  0,  0,  0,  0,  0,  0],
+           [0,  5,  1,  0,  0,  0,  0,  5,  0,  0],
+           [0,  5,  0,  1,  0,  0,  0,  0,  5,  0],
+           [0,  5,  1,  1,  0,  0,  0,  5,  5,  1],
+           [5,  5,  0,  0, 25,  0,  0,  0,  0,  0],
+           [5,  5,  1,  0, 25,  5,  0,  5,  0,  0],
+           [5,  5,  0,  1, 25,  0,  5,  0,  5,  0],
+           [5,  5,  1,  1, 25,  5,  5,  5,  5,  1]])
+
+df = df.append_columns({
+    'constant': [1 for _ in range(len(data_dict['rating']))],
+    'rating': data_dict['rating']
+}, column_order=['constant', 'rating'])
+do_assert("append_columns cols", df.columns, ['beef', 'pb', 'mayo', 'jelly',
+                                              'beef_pb', 'beef_mayo', 'beef_jelly',
+                                              'pb_mayo', 'pb_jelly',
+                                              'mayo_jelly',
+                                              'constant', 'rating'])
+do_assert("append columns matrix", df.to_array(),   [[0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1],
+                                                     [0,  0,  1,  0,  0,  0,
+                                                         0,  0,  0,  0,  1,  1],
+                                                     [0,  0,  0,  1,  0,  0,
+                                                         0,  0,  0,  0,  1,  4],
+                                                     [0,  0,  1,  1,  0,  0,
+                                                         0,  0,  0,  1,  1,  0],
+                                                     [5,  0,  0,  0,  0,  0,
+                                                         0,  0,  0,  0,  1,  4],
+                                                     [5,  0,  1,  0,  0,  5,
+                                                         0,  0,  0,  0,  1,  8],
+                                                     [5,  0,  0,  1,  0,  0,
+                                                         5,  0,  0,  0,  1,  1],
+                                                     [5,  0,  1,  1,  0,  5,
+                                                         5,  0,  0,  1,  1,  0],
+                                                     [0,  5,  0,  0,  0,  0,
+                                                         0,  0,  0,  0,  1,  5],
+                                                     [0,  5,  1,  0,  0,  0,
+                                                         0,  5,  0,  0,  1,  0],
+                                                     [0,  5,  0,  1,  0,  0,
+                                                         0,  0,  5,  0,  1,  9],
+                                                     [0,  5,  1,  1,  0,  0,
+                                                         0,  5,  5,  1,  1,  0],
+                                                     [5,  5,  0,  0, 25,  0,
+                                                         0,  0,  0,  0,  1,  0],
+                                                     [5,  5,  1,  0, 25,  5,
+                                                         0,  5,  0,  0,  1,  0],
+                                                     [5,  5,  0,  1, 25,  0,
+                                                         5,  0,  5,  0,  1,  0],
+                                                     [5,  5,  1,  1, 25,  5,  5,  5,  5,  1,  1,  0]])
