@@ -63,10 +63,8 @@ class DataFrame:
             for x in arr:
                 if x not in col_data:
                     col_data.append(x)
-        # print("list dummy vars", col_data)
         new_data = [[(1 if item in arr else 0) for arr in d[col]]
                     for item in col_data]
-        # print("list dummy vars", new_data)
         new_cols_data = dict(zip(col_data, new_data))
         del d[col]
         d.update(new_cols_data)
