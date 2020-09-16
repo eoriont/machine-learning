@@ -84,7 +84,3 @@ class DataFrame:
         d.update(data_dict)
         c += list(data_dict) if column_order is None else column_order
         return DataFrame(d, c)
-
-
-if __name__ == "__main__":
-    print("Hello")
