@@ -12,8 +12,8 @@ class LinearRegressor:
     def solve_coefficients(self):
         x_data = [list(t) for t in zip(*self.df.to_array())]
         y_data = [self.prediction_column]
-        X, y = Matrix(x_data).transpose(), Matrix(y_data).transpose()
-        result = (X.transpose() @ X).inverse() @ (X.transpose() @ y)
+        X, Y = Matrix(x_data).transpose(), Matrix(y_data).transpose()
+        result = (X.transpose() @ X).inverse() @ (X.transpose() @ Y)
 
         return {key: round(val, 5) for key, val in zip(self.df.columns, result[:, 0])}
 
