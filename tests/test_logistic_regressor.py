@@ -30,7 +30,7 @@ df = df.append_columns({
 })
 df = df.apply('rating', lambda x: 0.1 if x == 0 else x)
 regressor = LogisticRegressor(df, prediction_column='rating', max_value=10)
-do_assert("coefficients", regressor.coefficients,
+do_assert("coefficients", _round(regressor.coefficients),
           _round({
               'beef': -0.03900793,
               'pb': -0.02047944,

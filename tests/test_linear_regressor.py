@@ -7,6 +7,11 @@ try:
 except ImportError as e:
     print(e)
 
+
+def _round(x):
+    return {key: round(val, 5) for key, val in x.items()}
+
+
 data_dict = {
     'beef': [0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 5, 5, 5, 5],
     'pb': [0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5],
@@ -24,7 +29,7 @@ df = df.append_columns({
     'rating': data_dict['rating']
 })
 linear_regressor = LinearRegressor(df, prediction_column='rating')
-do_assert("linear regressor coefficients", linear_regressor.coefficients,
+do_assert("linear regressor coefficients", _round(linear_regressor.coefficients),
           {
               'beef': 0.25,
               'pb': 0.4,
@@ -37,7 +42,7 @@ do_assert("linear regressor coefficients", linear_regressor.coefficients,
               'pb_jelly': 0.65,
               'mayo_jelly': -3.25,
               'constant': 2.1875
-          })
+})
 
 do_assert("gather_all_inputs", linear_regressor.gather_all_inputs({
     'beef': 5,
@@ -65,38 +70,38 @@ do_assert("gather_all_inputs", linear_regressor.gather_all_inputs({
 # ^ Note: this should include all interactions terms AND any constant term
 # that also appear in the base dataframe
 
-do_assert("prediction 1", linear_regressor.predict({
+do_assert("prediction 1", round(linear_regressor.predict({
     'beef': 5,
     'pb': 5,
     'mayo': 1,
     'jelly': 1,
     'constant': 1
-}),
+}), 5),
     -1.8125)
 
-do_assert("prediction 2", linear_regressor.predict({
+do_assert("prediction 2", round(linear_regressor.predict({
     'beef': 0,
     'pb': 3,
     'mayo': 0,
     'jelly': 1,
     'constant': 1
-}),
+}), 5),
     6.8375)
 
-do_assert("prediction 3", linear_regressor.predict({
+do_assert("prediction 3", round(linear_regressor.predict({
     'beef': 1,
     'pb': 1,
     'mayo': 1,
     'jelly': 0,
     'constant': 1
-}),
+}), 5),
     1.7775)
 
-do_assert("prediction 4", linear_regressor.predict({
+do_assert("prediction 4", round(linear_regressor.predict({
     'beef': 6,
     'pb': 0,
     'mayo': 1,
     'jelly': 0,
     'constant': 1
-}),
+}), 5),
     8.7375)

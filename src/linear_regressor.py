@@ -14,7 +14,7 @@ class LinearRegressor:
         X, Y = Matrix(x_data).transpose(), Matrix(y_data).transpose()
         result = (X.transpose() @ X).inverse() @ (X.transpose() @ Y)
 
-        return {key: round(val, 5) for key, val in zip(self.df.columns, result[:, 0])}
+        return {key: val for key, val in zip(self.df.columns, result[:, 0])}
 
     def gather_all_inputs(self, terms):
         to_calc = [x.split("_") for x in self.df.columns if '_' in x]
