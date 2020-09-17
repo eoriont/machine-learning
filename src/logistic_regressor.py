@@ -1,28 +1,14 @@
 import math
 from matrix import Matrix
+from linear_regressor import LinearRegressor
 
 
-class PolynomialRegressor:
-    def __init__(self, degree, y_function=None):
-        self.degree = degree
-        self.y_function = (lambda x: x) if y_function is None else y_function
+class LogisticRegressor(LinearRegressor):
+    def __init__(self, df, prediction_column, max_value):
+        self.max_value = max_value
+        df = df.apply(prediction_column,
+                      lambda x: math.log((self.max_value/x)-1))
+        super().__init__(df, prediction_column)
 
-    def evaluate(self, x):
-        return sum(self.coefficients[i] * x**i for i in range(self.degree))
-
-    def ingest_data(self, data):
-        self.data = data
-
-    def sum_squared_error(self):
-        return sum((self.evaluate(x)-y)**2 for x, y in self.data)
-
-    def solve_coefficients(self):
-        x_data = [list(t) for t in zip(*self.data)]
-        y_data = [x_data.pop()]
-        X, y = Matrix(x_data).transpose(), Matrix(
-            y_data).transpose().element_operation(self.y_function)
-        result = (X.transpose() @ X).inverse() @ (X.transpose() @ y)
-
-        self.coefficients = result[:, 0]
-        if type(self.coefficients) != list:
-            self.coefficients = [self.coefficients]
+    def predict(self, inputs):
+        return self.max_value/(1+math.exp(super().predict(inputs)))

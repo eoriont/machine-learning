@@ -99,7 +99,6 @@ class Matrix:
         for x in range(new_dim[0]):
             new_row = []
             for y in range(new_dim[1]):
-                # Rounds the value, because sometimes there is a rounding error
                 val = [self.elements[x][i] * mat2.elements[i][y]
                        for i in range(dim1[1])]
                 new_row.append(sum(val))

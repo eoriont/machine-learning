@@ -84,3 +84,8 @@ class DataFrame:
         d.update(data_dict)
         c += list(data_dict) if column_order is None else column_order
         return DataFrame(d, c)
+
+    def apply(self, column, func):
+        d, c = self.get_data_copies()
+        d[column] = [func(x) for x in d[column]]
+        return DataFrame(d, c)
