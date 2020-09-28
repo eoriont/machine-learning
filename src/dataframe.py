@@ -24,6 +24,11 @@ class DataFrame:
             y, x) not in l]
         return l
 
+    @staticmethod
+    def from_mat(mat, cols):
+        d = {col: list(arr) for col, arr in zip(cols, zip(*mat))}
+        return DataFrame(d, cols)
+
     def filter_columns(self, cols):
         return DataFrame(self.data_dict, cols)
 

@@ -105,3 +105,11 @@ do_assert("prediction 4", round(linear_regressor.predict({
     'constant': 1
 }), 5),
     8.7375)
+
+print(linear_regressor.predict({
+    'beef': 0,
+    'pb': 0,
+    'mayo': 0,
+    'jelly': 0,
+    'constant': 1
+}))

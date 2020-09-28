@@ -29,3 +29,7 @@ class LinearRegressor:
             zipped.append([v, self.coefficients[k]])
 
         return sum(x*y for x, y in zipped)
+
+    def round_coefficients(self):
+        self.coefficients = {key: round(val, 7)
+                             for key, val in self.coefficients.items()}
