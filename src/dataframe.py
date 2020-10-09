@@ -14,8 +14,7 @@ class DataFrame:
         for x in columns_to_multiply:
             new_col = '_'.join(x)
             c.append(new_col)
-            d[new_col] = [x*y for x,
-                          y in zip(self.data_dict[x[0]], self.data_dict[x[1]])]
+            d[new_col] = [x*y for x, y in zip(d[x[0]], d[x[1]])]
         return DataFrame(d, c)
 
     def cartesian_product(self):
