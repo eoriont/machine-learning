@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 sys.path.append("src")
 try:
-    from polynomial_regressor import PolynomialRegressor
+    from deprecated_polynomial_regressor import PolynomialRegressor
 except ImportError as e:
     print(e)
 

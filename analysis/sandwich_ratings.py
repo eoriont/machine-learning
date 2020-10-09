@@ -1,7 +1,7 @@
 import sys
 sys.path.append("src")
 try:
-    from polynomial_regressor import PolynomialRegressor
+    from deprecated_polynomial_regressor import PolynomialRegressor
     from matrix import Matrix
 except ImportError as e:
     print(e)

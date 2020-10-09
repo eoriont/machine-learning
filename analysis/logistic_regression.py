@@ -3,7 +3,7 @@ import math
 sys.path.append("src")
 try:
     from matrix import Matrix
-    from polynomial_regressor import PolynomialRegressor
+    from deprecated_polynomial_regressor import PolynomialRegressor
 except ImportError as e:
     print(e)
 

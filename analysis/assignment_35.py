@@ -6,7 +6,7 @@ try:
     from matrix import Matrix
     from featurizer import Featurizer
     from otest import do_assert
-    from polynomial_regressor import PolynomialRegressor
+    from deprecated_polynomial_regressor import PolynomialRegressor
 except ImportError as e:
     print(e)
 
