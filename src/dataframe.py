@@ -121,19 +121,28 @@ class DataFrame:
              for k, v in d.items()}
         return DataFrame(d, c)
 
-    def get_rows(self, d, cols, func):
-        return [x for x in zip(*d.values()) if func({k: v for k, v in zip(cols, x)})]
+    def get_rows(self, func=lambda _: True):
+        return [x for x in zip(*self.data_dict.values()) if func({k: v for k, v in zip(self.columns, x)})]
 
     def select_rows_where(self, func):
         d, c = self.get_data_copies()
-        cols = list(zip(*self.get_rows(d, c, func)))
+        cols = list(zip(*self.get_rows(func)))
         d = {k: v for k, v in zip(c, cols)}
+        return DataFrame(d, c)
+
+    def add_entry(self, entry):
+        d, c = self.get_data_copies()
+        for col in c:
+            d[col].appen(entry[col])
         return DataFrame(d, c)
 
     def order_by(self, col, ascending):
         d, c = self.get_data_copies()
-        rows = self.get_rows(d, c, lambda _: True)
+        rows = self.get_rows()
         rows.sort(key=lambda x: x[c.index(col)], reverse=not ascending)
         cols = list(zip(*rows))
         d = {k: v for k, v in zip(c, cols)}
         return DataFrame(d, c)
+
+    def get_column(self, col):
+        return self.data_dict[col].copy()
