@@ -193,3 +193,42 @@ do_assert("append columns matrix", df.to_array(),   [[0,  0,  0,  0,  0,  0,  0,
                                                      [5,  5,  0,  1, 25,  0,
                                                          5,  0,  5,  0,  1,  0],
                                                      [5,  5,  1,  1, 25,  5,  5,  5,  5,  1,  1,  0]])
+
+################################################################
+#!==============================================================
+# >============================================================
+
+columns = ['firstname', 'lastname', 'age']
+arr = [['Kevin', 'Fray', 5],
+       ['Charles', 'Trapp', 17],
+       ['Anna', 'Smith', 13],
+       ['Sylvia', 'Mendez', 9]]
+df = DataFrame.from_array(arr, columns)
+do_assert("select columns by name", df.select_columns(['firstname', 'age']).to_array(),
+          [['Kevin', 5],
+           ['Charles', 17],
+           ['Anna', 13],
+           ['Sylvia', 9]])
+
+do_assert("select row by index", df.select_rows([1, 3]).to_array(),
+          [['Charles', 'Trapp', 17],
+           ['Sylvia', 'Mendez', 9]])
+
+do_assert("select row by condition", df.select_rows_where(
+    lambda row: len(row['firstname']) >= len(row['lastname'])
+    and row['age'] > 10
+).to_array(),
+    [['Charles', 'Trapp', 17]])
+
+
+do_assert("order_rows_by_column", df.order_by('age', ascending=True).to_array(),
+          [['Kevin', 'Fray', 5],
+           ['Sylvia', 'Mendez', 9],
+           ['Anna', 'Smith', 13],
+           ['Charles', 'Trapp', 17]])
+
+do_assert("order rows by column 2", df.order_by('firstname', ascending=False).to_array(),
+          [['Sylvia', 'Mendez', 9],
+           ['Kevin', 'Fray', 5],
+           ['Charles', 'Trapp', 17],
+           ['Anna', 'Smith', 13]])

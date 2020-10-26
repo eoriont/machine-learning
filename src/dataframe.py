@@ -23,6 +23,10 @@ class DataFrame:
             y, x) not in l]
         return l
 
+    @classmethod
+    def from_array(cls, arr, cols):
+        return DataFrame.from_mat(arr, cols)
+
     @staticmethod
     def from_mat(mat, cols):
         d = {col: list(arr) for col, arr in zip(cols, zip(*mat))}
@@ -92,4 +96,44 @@ class DataFrame:
     def apply(self, column, func):
         d, c = self.get_data_copies()
         d[column] = [func(x) for x in d[column]]
+        return DataFrame(d, c)
+
+    def trim_column(self, column, max_num):
+        d, c = self.get_data_copies()
+        small_num = 0.2
+
+        def t(x):
+            if x == 0:
+                return small_num
+            elif x == max_num:
+                return max_num - small_num
+            else:
+                return x
+        d[column] = [t(x) for x in d[column]]
+        return DataFrame(d, c)
+
+    def select_columns(self, cols):
+        return self.filter_columns(cols)
+
+    def select_rows(self, rows):
+        d, c = self.get_data_copies()
+        d = {k: [x for i, x in enumerate(v) if i in rows]
+             for k, v in d.items()}
+        return DataFrame(d, c)
+
+    def get_rows(self, d, cols, func):
+        return [x for x in zip(*d.values()) if func({k: v for k, v in zip(cols, x)})]
+
+    def select_rows_where(self, func):
+        d, c = self.get_data_copies()
+        cols = list(zip(*self.get_rows(d, c, func)))
+        d = {k: v for k, v in zip(c, cols)}
+        return DataFrame(d, c)
+
+    def order_by(self, col, ascending):
+        d, c = self.get_data_copies()
+        rows = self.get_rows(d, c, lambda _: True)
+        rows.sort(key=lambda x: x[c.index(col)], reverse=not ascending)
+        cols = list(zip(*rows))
+        d = {k: v for k, v in zip(c, cols)}
         return DataFrame(d, c)
