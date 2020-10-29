@@ -28,8 +28,15 @@ class KNearestNeighborsClassifier:
         return avgs
 
     def classify(self, obs, k):
-        avgs = self.compute_average_distances(obs, k)
-        return min(avgs, key=avgs.get)
+        near = self.nearest_neighbors(obs).select_rows(
+            range(k)).get_column("types")
+        type_counts = {t: near.count(t) for t in set(near)}
+        m = max(type_counts, key=type_counts.get)
+        if list(type_counts.values()).count(type_counts[m]) > 1:
+            avgs = self.compute_average_distances(obs, k)
+            return min(avgs, key=avgs.get)
+        else:
+            return m
 
 
 def dist(p1, p2):

@@ -36,7 +36,7 @@ class DataFrame:
         return DataFrame(self.data_dict, cols)
 
     def get_data_copies(self):
-        return self.data_dict.copy(), self.columns.copy()
+        return {k: v.copy() for k, v in self.data_dict.items()}, self.columns.copy()
 
     def create_all_dummy_variables(self):
         categorical_cols = [col for col in self.data_dict if any(
@@ -133,7 +133,7 @@ class DataFrame:
     def add_entry(self, entry):
         d, c = self.get_data_copies()
         for col in c:
-            d[col].appen(entry[col])
+            d[col].append(entry[col])
         return DataFrame(d, c)
 
     def order_by(self, col, ascending):
@@ -141,8 +141,19 @@ class DataFrame:
         rows = self.get_rows()
         rows.sort(key=lambda x: x[c.index(col)], reverse=not ascending)
         cols = list(zip(*rows))
-        d = {k: v for k, v in zip(c, cols)}
+        d = {k: list(v) for k, v in zip(c, cols)}
         return DataFrame(d, c)
 
     def get_column(self, col):
         return self.data_dict[col].copy()
+
+    def get_length(self):
+        return len(next(iter(self.data_dict.values())))
+
+    def remove_entry(self, index):
+        d, c = self.get_data_copies()
+        entry = {}
+        for col in c:
+            entry[col] = d[col][index]
+            del d[col][index]
+        return DataFrame(d, c), entry
