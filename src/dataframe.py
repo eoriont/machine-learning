@@ -25,12 +25,7 @@ class DataFrame:
 
     @classmethod
     def from_array(cls, arr, cols):
-        return DataFrame.from_mat(arr, cols)
-
-    @staticmethod
-    def from_mat(mat, cols):
-        d = {col: list(arr) for col, arr in zip(cols, zip(*mat))}
-        return DataFrame(d, cols)
+        return DataFrame({c: list(a) for c, a in zip(cols, zip(*arr))}, cols)
 
     def filter_columns(self, cols):
         return DataFrame(self.data_dict, cols)

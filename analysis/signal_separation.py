@@ -35,7 +35,7 @@ data = [(0.0, 4.0),
         (4.6, -85.7),
         (4.8, -154.4)]
 
-df = DataFrame.from_mat(data, ["b", "y"])
+df = DataFrame.from_array(data, ["b", "y"])
 x_col = df.data_dict['b']
 df = df.append_columns({
     'c': [x**2 for x in x_col],
@@ -77,7 +77,7 @@ data = [(0.0, 7.0),
         (4.8, -5.22)]
 
 
-df = DataFrame.from_mat(data, ["x", "y"])
+df = DataFrame.from_array(data, ["x", "y"])
 x_col = df.data_dict['x']
 df = df.append_columns({
     'a': [math.sin(x) for x in x_col],

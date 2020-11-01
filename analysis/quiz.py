@@ -10,7 +10,7 @@ except ImportError as e:
 
 data = [(2, 27.0154), (3, 64.0912), (4, 159.817)]
 
-df = DataFrame.from_mat(data, ["x", "y"])
+df = DataFrame.from_array(data, ["x", "y"])
 x_col = df.data_dict['x']
 df = df.append_columns({
     'l': [math.log(x) for x in x_col],

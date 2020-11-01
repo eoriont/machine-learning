@@ -18,7 +18,7 @@ data = [[1, 95, 33, 1, 0],
         [1, 99, 36, 0, 0],
         [0, 95, 32, 0, 0]]
 
-df = DataFrame.from_mat(
+df = DataFrame.from_array(
     data, ['accepted', 'percentile', 'score', 'academicec', 'sportsec'])
 df = df.append_columns({'const': [1 for _ in data]})
 print(df.data_dict)
