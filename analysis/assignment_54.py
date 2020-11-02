@@ -7,6 +7,16 @@ try:
 except ImportError as e:
     print(e)
 
+
+def trim(x):
+    if x == 0:
+        return 0.2
+    elif x == 1:
+        return 0.8
+    else:
+        return x
+
+
 data = [[1, 95, 33, 1, 0],
         [0, 95, 34, 0, 0],
         [1, 92, 35, 0, 1],
@@ -20,7 +30,9 @@ data = [[1, 95, 33, 1, 0],
 
 df = DataFrame.from_array(
     data, ['accepted', 'percentile', 'score', 'academicec', 'sportsec'])
-df = df.append_columns({'const': [1 for _ in data]})
+df = df.append_columns(
+    {'const': [1 for _ in data]}).column_operation('accepted', trim)
+
 print(df.data_dict)
 
 regressor = LogisticRegressor(df, 'accepted')

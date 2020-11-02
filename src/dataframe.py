@@ -93,37 +93,20 @@ class DataFrame:
         d[column] = [func(x) for x in d[column]]
         return DataFrame(d, c)
 
-    def trim_column(self, column, max_num):
-        d, c = self.get_data_copies()
-        small_num = 0.2
-
-        def t(x):
-            if x == 0:
-                return small_num
-            elif x == max_num:
-                return max_num - small_num
-            else:
-                return x
-        d[column] = [t(x) for x in d[column]]
-        return DataFrame(d, c)
-
+    # This is the same as filter_columns
     def select_columns(self, cols):
-        return self.filter_columns(cols)
+        return DataFrame(self.data_dict, cols)
 
     def select_rows(self, rows):
-        d, c = self.get_data_copies()
-        d = {k: [x for i, x in enumerate(v) if i in rows]
-             for k, v in d.items()}
-        return DataFrame(d, c)
-
-    def get_rows(self, func=lambda _: True):
-        return [x for x in zip(*self.data_dict.values()) if func({k: v for k, v in zip(self.columns, x)})]
+        arr = self.to_array()
+        return DataFrame.from_array((x for i, x in enumerate(arr) if i in rows), self.columns)
 
     def select_rows_where(self, func):
-        d, c = self.get_data_copies()
-        cols = list(zip(*self.get_rows(func)))
-        d = {k: v for k, v in zip(c, cols)}
-        return DataFrame(d, c)
+        arr = self.to_array()
+        return DataFrame.from_array((x for x in arr if func(self.to_entry(x))), self.columns)
+
+    def to_entry(self, arr):
+        return {k: v for k, v in zip(self.columns, arr)}
 
     def add_entry(self, entry):
         d, c = self.get_data_copies()
@@ -131,13 +114,9 @@ class DataFrame:
             d[col].append(entry[col])
         return DataFrame(d, c)
 
-    def order_by(self, col, ascending):
-        d, c = self.get_data_copies()
-        rows = self.get_rows()
-        rows.sort(key=lambda x: x[c.index(col)], reverse=not ascending)
-        cols = list(zip(*rows))
-        d = {k: list(v) for k, v in zip(c, cols)}
-        return DataFrame(d, c)
+    def order_by(self, col, ascending=True):
+        return DataFrame.from_array(sorted(self.to_array(), key=lambda x: x[self.columns.index(
+            col)], reverse=not ascending), self.columns)
 
     def get_column(self, col):
         return self.data_dict[col].copy()
@@ -152,3 +131,8 @@ class DataFrame:
             entry[col] = d[col][index]
             del d[col][index]
         return DataFrame(d, c), entry
+
+    def column_operation(self, col, op):
+        d, c = self.get_data_copies()
+        d[col] = [op(x) for x in d[col]]
+        return DataFrame(d, c)

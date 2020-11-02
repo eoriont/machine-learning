@@ -6,7 +6,6 @@ from linear_regressor import LinearRegressor
 class LogisticRegressor(LinearRegressor):
     def __init__(self, df, prediction_column, max_value=1):
         self.max_value = max_value
-        df = df.trim_column(prediction_column, max_value)
         df = df.apply(prediction_column, self.transform)
         super().__init__(df, prediction_column)
 
