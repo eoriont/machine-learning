@@ -4,16 +4,16 @@ from matrix import Matrix
 
 class LinearRegressor:
     def __init__(self, df, prediction_column):
-        self.prediction_column = df.data_dict[prediction_column]
+        self.pc = prediction_column
+        self.prediction_column = df.data_dict[self.pc]
         self.df = df.remove_columns([prediction_column])
         self.coefficients = self.solve_coefficients()
 
     def solve_coefficients(self):
         x_data = [list(t) for t in zip(*self.df.to_array())]
         y_data = [self.prediction_column]
-        X, Y = Matrix(x_data).transpose(), Matrix(y_data).transpose()
-        result = (X.transpose() @ X).inverse() @ (X.transpose() @ Y)
-
+        X, Y = ~Matrix(x_data), ~Matrix(y_data)
+        result = (~X @ X).inverse() @ (~X @ Y)
         return {key: val for key, val in zip(self.df.columns, result[:, 0])}
 
     def gather_all_inputs(self, terms):
@@ -33,3 +33,7 @@ class LinearRegressor:
     def round_coefficients(self):
         self.coefficients = {key: round(val, 7)
                              for key, val in self.coefficients.items()}
+
+    def rss(self, df):
+        df = df.remove_columns(['y'])
+        return sum((self.predict(df.to_entry(x)) - y)**2 for x, y in zip(df.to_array(), self.prediction_column))

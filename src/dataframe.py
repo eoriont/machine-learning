@@ -136,3 +136,6 @@ class DataFrame:
         d, c = self.get_data_copies()
         d[col] = [op(x) for x in d[col]]
         return DataFrame(d, c)
+
+    def to_json(self):
+        return [self.to_entry(arr) for arr in self.to_array()]

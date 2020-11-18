@@ -377,6 +377,16 @@ class Matrix:
             raise Exception("Error: Cannot scale by non-integer value")
         return self.scale(scalar)
 
+    # Overload the right multiplication op for SCALING
+    def __rmul__(self, scalar):
+        if (type(scalar) != int and type(scalar) != float):
+            raise Exception("Error: Cannot scale by non-integer value")
+        return self.scale(scalar)
+
+    # Overload complement op for transpose
+    def __invert__(self):
+        return self.transpose()
+
     # Overload the pow op
     def __pow__(self, num):
         return self.exponent(num)

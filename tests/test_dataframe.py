@@ -232,3 +232,69 @@ do_assert("order rows by column 2", df.order_by('firstname', ascending=False).to
            ['Kevin', 'Fray', 5],
            ['Charles', 'Trapp', 17],
            ['Anna', 'Smith', 13]])
+
+# >=========================================================================================================
+#!=========================================================================================================
+# >=========================================================================================================
+
+
+columns = ['Cookie Type', 'Portion Eggs',
+           'Portion Butter', 'Portion Sugar', 'Portion Flour']
+data = [['Shortbread',     0.14,       0.14,      0.28,     0.44],
+        ['Shortbread',     0.10,       0.18,      0.28,     0.44],
+        ['Shortbread',     0.12,       0.10,      0.33,     0.45],
+        ['Shortbread',     0.10,       0.25,      0.25,     0.40],
+        ['Sugar',     0.00,       0.10,      0.40,     0.50],
+        ['Sugar',     0.00,       0.20,      0.40,     0.40],
+        ['Sugar',     0.02,       0.08,      0.45,     0.45],
+        ['Sugar',     0.10,       0.15,      0.35,     0.40],
+        ['Sugar',     0.10,       0.08,      0.35,     0.47],
+        ['Sugar',     0.00,       0.05,      0.30,     0.65],
+        ['Fortune',     0.20,       0.00,      0.40,     0.40],
+        ['Fortune',     0.25,       0.10,      0.30,     0.35],
+        ['Fortune',     0.22,       0.15,      0.50,     0.13],
+        ['Fortune',     0.15,       0.20,      0.35,     0.30],
+        ['Fortune',     0.22,       0.00,      0.40,     0.38],
+        ['Shortbread',     0.05,       0.12,      0.28,     0.55],
+        ['Shortbread',     0.14,       0.27,      0.31,     0.28],
+        ['Shortbread',     0.15,       0.23,      0.30,     0.32],
+        ['Shortbread',     0.20,       0.10,      0.30,     0.40]]
+df = DataFrame.from_array(data, columns)
+json_data = df.to_json()
+do_assert("JSON conversion", json_data, [{'Cookie Type': 'Shortbread', 'Portion Eggs': 0.14, 'Portion Butter': 0.14, 'Portion Sugar': 0.28, 'Portion Flour': 0.44},
+                                         {'Cookie Type': 'Shortbread', 'Portion Eggs': 0.1,
+                                             'Portion Butter': 0.18, 'Portion Sugar': 0.28, 'Portion Flour': 0.44},
+                                         {'Cookie Type': 'Shortbread', 'Portion Eggs': 0.12,
+                                             'Portion Butter': 0.1, 'Portion Sugar': 0.33, 'Portion Flour': 0.45},
+                                         {'Cookie Type': 'Shortbread', 'Portion Eggs': 0.1,
+                                             'Portion Butter': 0.25, 'Portion Sugar': 0.25, 'Portion Flour': 0.4},
+                                         {'Cookie Type': 'Sugar', 'Portion Eggs': 0.0, 'Portion Butter': 0.1,
+                                          'Portion Sugar': 0.4, 'Portion Flour': 0.5},
+                                         {'Cookie Type': 'Sugar', 'Portion Eggs': 0.0, 'Portion Butter': 0.2,
+                                          'Portion Sugar': 0.4, 'Portion Flour': 0.4},
+                                         {'Cookie Type': 'Sugar', 'Portion Eggs': 0.02, 'Portion Butter': 0.08,
+                                          'Portion Sugar': 0.45, 'Portion Flour': 0.45},
+                                         {'Cookie Type': 'Sugar', 'Portion Eggs': 0.1, 'Portion Butter': 0.15,
+                                          'Portion Sugar': 0.35, 'Portion Flour': 0.4},
+                                         {'Cookie Type': 'Sugar', 'Portion Eggs': 0.1, 'Portion Butter': 0.08,
+                                          'Portion Sugar': 0.35, 'Portion Flour': 0.47},
+                                         {'Cookie Type': 'Sugar', 'Portion Eggs': 0.0, 'Portion Butter': 0.05,
+                                          'Portion Sugar': 0.3, 'Portion Flour': 0.65},
+                                         {'Cookie Type': 'Fortune', 'Portion Eggs': 0.2, 'Portion Butter': 0.0,
+                                          'Portion Sugar': 0.4, 'Portion Flour': 0.4},
+                                         {'Cookie Type': 'Fortune', 'Portion Eggs': 0.25, 'Portion Butter': 0.1,
+                                          'Portion Sugar': 0.3, 'Portion Flour': 0.35},
+                                         {'Cookie Type': 'Fortune', 'Portion Eggs': 0.22, 'Portion Butter': 0.15,
+                                          'Portion Sugar': 0.5, 'Portion Flour': 0.13},
+                                         {'Cookie Type': 'Fortune', 'Portion Eggs': 0.15, 'Portion Butter': 0.2,
+                                          'Portion Sugar': 0.35, 'Portion Flour': 0.3},
+                                         {'Cookie Type': 'Fortune', 'Portion Eggs': 0.22, 'Portion Butter': 0.0,
+                                          'Portion Sugar': 0.4, 'Portion Flour': 0.38},
+                                         {'Cookie Type': 'Shortbread', 'Portion Eggs': 0.05,
+                                          'Portion Butter': 0.12, 'Portion Sugar': 0.28, 'Portion Flour': 0.55},
+                                         {'Cookie Type': 'Shortbread', 'Portion Eggs': 0.14,
+                                          'Portion Butter': 0.27, 'Portion Sugar': 0.31, 'Portion Flour': 0.28},
+                                         {'Cookie Type': 'Shortbread', 'Portion Eggs': 0.15,
+                                          'Portion Butter': 0.23, 'Portion Sugar': 0.3, 'Portion Flour': 0.32},
+                                         {'Cookie Type': 'Shortbread', 'Portion Eggs': 0.2, 'Portion Butter': 0.1, 'Portion Sugar': 0.3, 'Portion Flour': 0.4}]
+          )
