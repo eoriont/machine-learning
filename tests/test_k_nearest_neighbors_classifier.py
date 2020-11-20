@@ -24,8 +24,9 @@ df = DataFrame.from_array(
     ['Cookie Type', 'Portion Eggs',
      'Portion Butter', 'Portion Sugar', 'Portion Flour']
 )
-# df = df.remove_columns(['ID'])
-knn = KNearestNeighborsClassifier(df, prediction_column='Cookie Type')
+
+knn = KNearestNeighborsClassifier(k=5)
+knn.fit(df, dependent_variable='Cookie Type')
 observation = {
     'Portion Eggs': 0.10,
     'Portion Butter': 0.15,
@@ -79,7 +80,7 @@ do_assert("average distances", {k: round(v, 3) for k, v in knn.compute_average_d
 
 # Note: the above has been rounded to 3 decimal places for ease of viewing, but you should not round yourself.
 
-do_assert("classify", knn.classify(observation, k=5),
+do_assert("classify", knn.classify(observation),
           'Shortbread')
 
 # (In the case of a tie, chose whichever class has a lower average distance. If that is still a tie, then pick randomly.)
