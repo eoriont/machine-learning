@@ -5,8 +5,11 @@ class DataFrame:
             data_dict) if column_order is None else column_order
 
     def to_array(self):
-        arrs = [self.data_dict[col] for col in self.columns]
-        return [list(arr) for arr in zip(*arrs)]
+        if self.columns[0] in self.data_dict:
+            arrs = [self.data_dict[col] for col in self.columns]
+            return [list(arr) for arr in zip(*arrs)]
+        else:
+            return []
 
     def append_pairwise_interactions(self):
         columns_to_multiply = self.cartesian_product()
@@ -119,10 +122,19 @@ class DataFrame:
             col)], reverse=not ascending), self.columns)
 
     def get_column(self, col):
-        return self.data_dict[col].copy()
+        if col in self.columns:
+            if col in self.data_dict.keys():
+                return self.data_dict[col].copy()
+            else:
+                return []
+        else:
+            raise Exception("Accessing column that doesn't exist!")
 
     def get_length(self):
-        return len(next(iter(self.data_dict.values())))
+        try:
+            return len(next(iter(self.data_dict.values())))
+        except StopIteration:
+            return 0
 
     def remove_entry(self, index):
         d, c = self.get_data_copies()
@@ -139,3 +151,18 @@ class DataFrame:
 
     def to_json(self):
         return [self.to_entry(arr) for arr in self.to_array()]
+
+    def remove_duplicates(self, col):
+        indices = []
+        checked = []
+        for i, x in enumerate(self.data_dict[col]):
+            if x not in checked:
+                checked.append(x)
+                indices.append(i)
+        return self.select_rows(indices)
+
+    def round_column(self, col, places):
+        d, c = self.get_data_copies()
+        for i, x in enumerate(d[col]):
+            d[col][i] = round(x, places)
+        return DataFrame(d, c)
