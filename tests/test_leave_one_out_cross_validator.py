@@ -8,10 +8,9 @@ try:
 except ImportError as e:
     print(e)
 
-columns = ['Cookie Type', 'Portion Eggs',
-           'Portion Butter', 'Portion Sugar', 'Portion Flour']
-data = [['Shortbread',     0.14,       0.14,      0.28,     0.44],
-        ['Shortbread',     0.10,       0.18,      0.28,     0.44],
+df = DataFrame.from_array(
+    [['Shortbread',     0.14,       0.14,      0.28,     0.44],
+     ['Shortbread',     0.10,       0.18,      0.28,     0.44],
         ['Shortbread',     0.12,       0.10,      0.33,     0.45],
         ['Shortbread',     0.10,       0.25,      0.25,     0.40],
         ['Sugar',     0.00,       0.10,      0.40,     0.50],
@@ -28,15 +27,13 @@ data = [['Shortbread',     0.14,       0.14,      0.28,     0.44],
         ['Shortbread',     0.05,       0.12,      0.28,     0.55],
         ['Shortbread',     0.14,       0.27,      0.31,     0.28],
         ['Shortbread',     0.15,       0.23,      0.30,     0.32],
-        ['Shortbread',     0.20,       0.10,      0.30,     0.40]]
+        ['Shortbread',     0.20,       0.10,      0.30,     0.40]],
+    ['Cookie Type', 'Portion Eggs', 'Portion Butter',
+        'Portion Sugar', 'Portion Flour']
+)
+knn = KNearestNeighborsClassifier(k=5)
 
-df = DataFrame.from_array(data, columns)
-json_data = df.to_json()
-knn = KNearestNeighborsClassifier(df, prediction_column='Cookie Type')
-def classifier(observation): return knn.classify(observation, 5)
-
-
-cv = LeaveOneOutCrossValidator(classifier, json_data)
+cv = LeaveOneOutCrossValidator(knn, df, prediction_column='Cookie Type')
 do_assert("accuracy", cv.accuracy(),
           0.6842105263157895)
 
@@ -62,9 +59,9 @@ do_assert("accuracy", cv.accuracy(),
 # Row 18 -- True Class is Shortbread; Predicted Class was Shortbread
 
 accuracies = []
-for k in range(1, len(data)-1):
-    def classifier(observation): return knn.classify(observation, k)
-    cv = LeaveOneOutCrossValidator(classifier, json_data)
+for k in range(1, df.get_length()-1):
+    knn = KNearestNeighborsClassifier(k)
+    cv = LeaveOneOutCrossValidator(knn, df, prediction_column='Cookie Type')
     accuracies.append(cv.accuracy())
 
 do_assert("accuracies2", accuracies,
