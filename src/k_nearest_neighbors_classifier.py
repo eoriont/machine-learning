@@ -21,7 +21,8 @@ class KNearestNeighborsClassifier:
 
     def compute_average_distances(self, obs, k=None):
         k = len(self.df.get_column(self.dependent_variable)) if k is None else k
-        distances = self.compute_distances(obs).select_rows(range(k))
+        distances = self.compute_distances(obs).order_by(
+            'distances', ascending=True).select_rows(range(k))
         types = distances.get_column('types')
         indices = {t: [i for i in range(
             len(types)) if types[i] == t] for t in set(types)}
@@ -36,7 +37,8 @@ class KNearestNeighborsClassifier:
         type_counts = {t: near.count(t) for t in set(near)}
         m = max(type_counts, key=type_counts.get)
         if list(type_counts.values()).count(type_counts[m]) > 1:
-            avgs = self.compute_average_distances(obs, self.k)
+            avgs = {k: v for k, v in self.compute_average_distances(
+                obs, self.k).items() if type_counts[k] == type_counts[m]}
             return min(avgs, key=avgs.get)
         else:
             return m
