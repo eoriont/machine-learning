@@ -13,7 +13,11 @@ class DecisionTree:
         self.root = Node(self.df)
 
     def split(self):
-        self.root.split()
+        return self.root.split()
+
+    def fit(self):
+        while self.split():
+            pass
 
 
 class Node:
@@ -30,23 +34,28 @@ class Node:
         self.possible_splits = DataFrame.from_array(
             ps_array, ['feature', 'value', 'goodness of split'])
 
+        self.low = None
+        self.high = None
+
         if self.possible_splits.get_length() == 0:
             return
         bs = max(self.possible_splits.to_array(), key=lambda x: x[2])
         self.best_split = (bs[0], bs[1])
 
-        self.low = None
-        self.high = None
-
     def split(self):
         # If haven't split yet
         if self.low is None:
-            s, df = self.best_split, self.df
-            self.low = Node(df.select_rows_where(lambda x: x[s[0]] <= s[1]))
-            self.high = Node(df.select_rows_where(lambda x: x[s[0]] > s[1]))
+            if self.impurity != 0:
+                s, df = self.best_split, self.df
+                self.low = Node(df.select_rows_where(
+                    lambda x: x[s[0]] <= s[1]))
+                self.high = Node(df.select_rows_where(
+                    lambda x: x[s[0]] > s[1]))
+                return True
+            else:
+                return False
         else:
-            self.low.split()
-            self.high.split()
+            return self.low.split() or self.high.split()
 
 
 def get_splits_for(col, df, impurity):
