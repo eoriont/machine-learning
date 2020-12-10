@@ -17,6 +17,9 @@ class DecisionTree:
         while self.split():
             pass
 
+    def classify(self, obs):
+        return self.root.classify(obs)
+
 
 class Node:
     def __init__(self, df):
@@ -39,6 +42,15 @@ class Node:
             return
         bs = max(self.possible_splits.to_array(), key=lambda x: x[2])
         self.best_split = (bs[0], bs[1])
+
+    def classify(self, obs):
+        if self.impurity == 0:
+            return list(self.class_counts.keys())[0]
+        else:
+            if obs[self.best_split[0]] < self.best_split[1]:
+                return self.low.classify(obs)
+            else:
+                return self.high.classify(obs)
 
     def split(self):
         # If haven't split yet

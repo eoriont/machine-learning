@@ -166,6 +166,19 @@ do_assert("fit row indices 3", dt.root.low.high.row_indices,
 
 # > ===============================================================
 
+data = [[2, 13, 'B'], [2, 13, 'B'], [2, 13, 'B'], [2, 13, 'B'], [2, 13, 'B'], [2, 13, 'B'],
+        [3, 13, 'B'], [3, 13, 'B'], [3, 13, 'B'], [
+            3, 13, 'B'], [3, 13, 'B'], [3, 13, 'B'],
+        [2, 12, 'B'], [2, 12, 'B'],
+        [3, 12, 'A'], [3, 12, 'A'],
+        [3, 11, 'A'], [3, 11, 'A'],
+        [3, 11.5, 'A'], [3, 11.5, 'A'],
+        [4, 11, 'A'], [4, 11, 'A'],
+        [4, 11.5, 'A'], [4, 11.5, 'A'],
+        [2, 10.5, 'A'], [2, 10.5, 'A'],
+        [3, 10.5, 'B'],
+        [4, 10.5, 'A']]
+df = DataFrame.from_array(data, ['x', 'y', 'class'])
 dt = DecisionTree()
 dt.fit(df)
 
@@ -190,7 +203,7 @@ do_assert("best split 3", dt.root.best_split,
 do_assert("best split 4", dt.root.low.best_split,
           ('x', 2.5))
 do_assert("low low best split", dt.root.low.low.best_split,
-          ('y', 11))
+          ('y', 11.25))
 do_assert("low high best split", dt.root.low.high.best_split,
           ('y', 10.75))
 do_assert("low high low best split", dt.root.low.high.low.best_split,
