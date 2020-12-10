@@ -7,15 +7,13 @@ except ImportError as e:
 
 
 class DecisionTree:
-    def __init__(self, df):
-        self.df = df.append_columns(
-            {'id': [i for i in range(df.get_length())]})
-        self.root = Node(self.df)
-
     def split(self):
         return self.root.split()
 
-    def fit(self):
+    def fit(self, df):
+        self.df = df.append_columns(
+            {'id': [i for i in range(df.get_length())]})
+        self.root = Node(self.df)
         while self.split():
             pass
 

@@ -18,7 +18,8 @@ df = DataFrame.from_array(
      [3, 11, 'B']],
     ['x', 'y', 'class']
 )
-dt = DecisionTree(df)
+dt = DecisionTree()
+dt.fit(df)
 
 do_assert("Row indices", dt.root.row_indices,
           [0, 1, 2, 3, 4, 5, 6])  # these are the indices of data points in the root node
@@ -44,7 +45,7 @@ do_assert("possible splits", dt.root.possible_splits.round_column('goodness of s
 do_assert("best split", dt.root.best_split,
           ('y', 12.5))
 
-dt.split()
+# dt.split()
 # now, the decision tree looks like this:
 
 #           (3A, 4B)
@@ -73,7 +74,7 @@ do_assert("low possible splits", dt.root.low.possible_splits.round_column('goodn
 do_assert("low best split", dt.root.low.best_split,
           ('x', 2.5))
 
-dt.split()
+# dt.split()
 # now, the decision tree looks like this:
 
 #                     (3A, 4B)
@@ -106,13 +107,14 @@ df = DataFrame.from_array(
      [3, 11, 'B']],
     ['x', 'y', 'class']
 )
-dt = DecisionTree(df)
+dt = DecisionTree()
+dt.fit(df)
 
 # currently, the decision tree looks like this:
 
 #   (3A, 4B)
 
-dt.split()
+# dt.split()
 # now, the decision tree looks like this:
 
 #           (3A, 4B)
@@ -120,7 +122,7 @@ dt.split()
 # (y < 12.5)       (y >= 12.5)
 # (3A, 1B)         (3B)
 
-dt.split()
+# dt.split()
 # now, the decision tree looks like this:
 
 #                     (3A, 4B)
@@ -138,13 +140,13 @@ do_assert("low low row indices 2", dt.root.low.low.row_indices,
 do_assert("low high row indices 2", dt.root.low.high.row_indices,
           [6])
 
-dt = DecisionTree(df)
+dt = DecisionTree()
+dt.fit(df)
 
 # currently, the decision tree looks like this:
 
 #   (3A, 4B)
 
-dt.fit()
 # now, the decision tree looks like this:
 
 #                     (3A, 4B)
@@ -161,5 +163,48 @@ do_assert("fit row indices 2", dt.root.low.low.row_indices,
           [0, 1, 2])
 do_assert("fit row indices 3", dt.root.low.high.row_indices,
           [6])
+
+# > ===============================================================
+
+dt = DecisionTree()
+dt.fit(df)
+
+# The tree should look like this:
+
+#                          (13A, 15B)
+#                           /      \
+#                 (y < 12.5)       (y >= 12.5)
+#                 (13A, 3B)        (12B)
+#                 /         \
+#         (x < 2.5)          (x >= 2.5)
+#         (2A, 2B)                (11A, 1B)
+#        /     \                  /        \
+# (y < 11)   (y >= 11)     (y < 10.75)     (y >= 10.75)
+# (2A)       (2B)          (1A, 1B)        (10A)
+#                          /      \
+#                 (x < 3.5)        (x >= 3.5)
+#                      (1B)        (1A)
+
+do_assert("best split 3", dt.root.best_split,
+          ('y', 12.5))
+do_assert("best split 4", dt.root.low.best_split,
+          ('x', 2.5))
+do_assert("low low best split", dt.root.low.low.best_split,
+          ('y', 11))
+do_assert("low high best split", dt.root.low.high.best_split,
+          ('y', 10.75))
+do_assert("low high low best split", dt.root.low.high.low.best_split,
+          ('x', 3.5))
+
+do_assert("classify 1", dt.classify({'x': 2, 'y': 11.5}),
+          'B')
+do_assert("classify 2", dt.classify({'x': 2.5, 'y': 13}),
+          'B')
+do_assert("classify 3", dt.classify({'x': 4, 'y': 12}),
+          'A')
+do_assert("classify 4", dt.classify({'x': 3.25, 'y': 10.5}),
+          'B')
+do_assert("classify 5", dt.classify({'x': 3.75, 'y': 10.5}),
+          'A')
 
 print(cstring("&6 All tests passed!"))
