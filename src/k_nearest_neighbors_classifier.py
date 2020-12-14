@@ -12,8 +12,8 @@ class KNearestNeighborsClassifier:
     def compute_distances(self, observation):
         rows = self.df.remove_columns([self.dependent_variable]).to_array()
         types = self.df.get_column(self.dependent_variable)
-        c = [x for x in self.df.columns if x != self.dependent_variable]
-        obs = [observation[col] for col in c]
+        columns = [x for x in self.df.columns if x != self.dependent_variable]
+        obs = [observation[col] for col in columns]
         return DataFrame({'distances': [dist(obs, rows[i]) for i in range(len(rows))], 'types': types}, ['distances', 'types'])
 
     def nearest_neighbors(self, observation):
@@ -35,13 +35,13 @@ class KNearestNeighborsClassifier:
         near = self.nearest_neighbors(obs).select_rows(
             range(self.k)).get_column("types")
         type_counts = {t: near.count(t) for t in set(near)}
-        m = max(type_counts, key=type_counts.get)
-        if list(type_counts.values()).count(type_counts[m]) > 1:
+        max_key = max(type_counts, key=type_counts.get)
+        if list(type_counts.values()).count(type_counts[max_key]) > 1:
             avgs = {k: v for k, v in self.compute_average_distances(
-                obs, self.k).items() if type_counts[k] == type_counts[m]}
+                obs, self.k).items() if type_counts[k] == type_counts[max_key]}
             return min(avgs, key=avgs.get)
         else:
-            return m
+            return max_key
 
 
 def dist(p1, p2):
