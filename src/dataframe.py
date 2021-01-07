@@ -1,3 +1,6 @@
+import random
+
+
 class DataFrame:
     def __init__(self, data_dict, column_order=None):
         self.data_dict = data_dict
@@ -166,3 +169,6 @@ class DataFrame:
         for i, x in enumerate(d[col]):
             d[col][i] = round(x, places)
         return DataFrame(d, c)
+
+    def random_row(self):
+        return random.choice(self.to_array())

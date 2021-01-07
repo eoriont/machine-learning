@@ -2,13 +2,17 @@ import sys
 sys.path.append('src')
 try:
     from dataframe import DataFrame
+    import random
 except ImportError as e:
     print(e)
 
 
 class DecisionTree:
+    def __init__(self, split_metric="gini"):
+        self.split_metric = split_metric
+
     def split(self):
-        return self.root.split()
+        return self.root.split(self.split_metric)
 
     def fit(self, df):
         self.df = df.append_columns(
@@ -52,11 +56,15 @@ class Node:
             else:
                 return self.high.classify(obs)
 
-    def split(self):
+    def split(self, split_metric):
         # If haven't split yet
         if self.low is None:
             if self.impurity != 0:
-                s, df = self.best_split, self.df
+                if split_metric == "random":
+                    row = self.possible_splits.random_row()
+                    s, df = (row[0], row[1]), self.df
+                elif split_metric == "gini":
+                    s, df = self.best_split, self.df
                 self.low = Node(df.select_rows_where(
                     lambda x: x[s[0]] <= s[1]))
                 self.high = Node(df.select_rows_where(
@@ -65,7 +73,7 @@ class Node:
             else:
                 return False
         else:
-            return self.low.split() or self.high.split()
+            return self.low.split(split_metric) or self.high.split(split_metric)
 
 
 def get_splits_for(col, df, impurity):
