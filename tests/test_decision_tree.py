@@ -220,6 +220,7 @@ do_assert("classify 4", dt.classify({'x': 3.25, 'y': 10.5}),
 do_assert("classify 5", dt.classify({'x': 3.75, 'y': 10.5}),
           'A')
 
+# Unsure how to test this as it is random
 dt = DecisionTree(split_metric='random')
 dt.fit(df)
 
