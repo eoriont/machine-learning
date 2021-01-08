@@ -1,3 +1,4 @@
+import os
 import random
 
 
@@ -172,3 +173,22 @@ class DataFrame:
 
     def random_row(self):
         return random.choice(self.to_array())
+
+    @classmethod
+    def from_csv(self, path_to_csv, header=True):
+        with open(path_to_csv, "r") as file:
+            lines = [[parse_str(i.strip()) for i in x.split(",")]
+                     for x in file.read().split("\n") if x.strip() != ""]
+            head = lines[0]
+            entries = lines[1:] if not header else lines
+            return DataFrame.from_array(entries, head)
+
+
+def parse_str(s):
+    if "\"" in s:
+        return s[1:-1]
+    else:
+        try:
+            return int(s)
+        except ValueError:
+            return float(s)
