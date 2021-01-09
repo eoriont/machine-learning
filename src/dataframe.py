@@ -177,18 +177,35 @@ class DataFrame:
     @classmethod
     def from_csv(self, path_to_csv, header=True):
         with open(path_to_csv, "r") as file:
-            lines = [[parse_str(i.strip()) for i in x.split(",")]
-                     for x in file.read().split("\n") if x.strip() != ""]
+            lines = [[parse_str(i.strip()) for i in split_row(x)]
+                     for x in file.read().split("\n") if x.strip()]
             head = lines[0]
             entries = lines[1:] if not header else lines
             return DataFrame.from_array(entries, head)
 
 
 def parse_str(s):
-    if "\"" in s:
-        return s[1:-1]
+    if s[0] == "\"":
+        return s[1:]
     else:
         try:
             return int(s)
         except ValueError:
             return float(s)
+
+
+def split_row(s):
+    vals = ["\""+x for x in s.split("\"") if x]
+    instr = s[0] == "\""
+    newvals = []
+    for v in vals:
+        if instr:
+            newvals.append(v)
+        elif v == "\", ":
+            instr = True
+            continue
+        else:
+            instr = False
+            newvals += [x for x in v[1:].split(", ") if x]
+        instr = not instr
+    return newvals

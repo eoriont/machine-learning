@@ -8,7 +8,8 @@ except ImportError as e:
 
 
 class DecisionTree:
-    def __init__(self, split_metric="gini"):
+    def __init__(self, split_metric="gini", dependent_variable="class"):
+        self.dependent_variable = dependent_variable
         self.split_metric = split_metric
 
     def split(self):
@@ -17,7 +18,7 @@ class DecisionTree:
     def fit(self, df):
         self.df = df.append_columns(
             {'id': [i for i in range(df.get_length())]})
-        self.root = Node(self.df)
+        self.root = Node(self.df, self.dependent_variable)
         while self.split():
             pass
 
@@ -26,16 +27,17 @@ class DecisionTree:
 
 
 class Node:
-    def __init__(self, df):
+    def __init__(self, df, dependent_variable):
+        self.dependent_variable = dependent_variable
         self.df = df
         self.row_indices = df.get_column('id')
-        classes = df.get_column('class')
+        classes = df.get_column(dependent_variable)
         cc = {k: classes.count(k) for k in set(classes)}
         self.class_counts = cc
-        self.impurity = gini_impurity(df)
+        self.impurity = gini_impurity(df, dependent_variable)
 
-        ps_array = sum((get_splits_for(x, df, self.impurity)
-                        for x in ['x', 'y']), [])
+        ps_array = sum((get_splits_for(x, df, self.impurity, dependent_variable)
+                        for x in df.columns if x not in [dependent_variable, 'id']), [])
         self.possible_splits = DataFrame.from_array(
             ps_array, ['feature', 'value', 'goodness of split'])
 
@@ -66,9 +68,9 @@ class Node:
                 elif split_metric == "gini":
                     s, df = self.best_split, self.df
                 self.low = Node(df.select_rows_where(
-                    lambda x: x[s[0]] <= s[1]))
+                    lambda x: x[s[0]] <= s[1]), self.dependent_variable)
                 self.high = Node(df.select_rows_where(
-                    lambda x: x[s[0]] > s[1]))
+                    lambda x: x[s[0]] > s[1]), self.dependent_variable)
                 return True
             else:
                 return False
@@ -76,7 +78,7 @@ class Node:
             return self.low.split(split_metric) or self.high.split(split_metric)
 
 
-def get_splits_for(col, df, impurity):
+def get_splits_for(col, df, impurity, dv):
     ps = []
 
     # Dataframe of rows in order of column
@@ -89,15 +91,15 @@ def get_splits_for(col, df, impurity):
         # Get low and high and calculate impurity/goodness
         low = df.select_rows_where(lambda x: x[col] <= split)
         high = df.select_rows_where(lambda x: x[col] > split)
-        s = low.get_length() * gini_impurity(low) + \
-            high.get_length() * gini_impurity(high)
-        s = sum(x.get_length() * gini_impurity(x) for x in [low, high])
+        s = low.get_length() * gini_impurity(low, dv) + \
+            high.get_length() * gini_impurity(high, dv)
+        s = sum(x.get_length() * gini_impurity(x, dv) for x in [low, high])
         goodness = impurity - s/df.get_length()
         ps.append([col, split, goodness])
     return ps
 
 
-def gini_impurity(df):
-    classes = df.get_column('class')
+def gini_impurity(df, dv):
+    classes = df.get_column(dv)
     cc = {k: classes.count(k) for k in set(classes)}
     return sum(cc[k]/len(classes) * (1 - cc[k]/len(classes)) for k in cc)
