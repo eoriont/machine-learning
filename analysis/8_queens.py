@@ -28,12 +28,33 @@ def random_optimizer(n):
     }
 
 
+def is_in_bounds(pos):
+    return 0 <= pos.x <= 7 and 0 <= pos.y <= 7
+
+
+def steepest_descent_optimizer(n):
+    optimized = {'cost': 1000}
+    translations = [(x, y) for x in range(-1, 2)
+                    for y in range(-1, 2) if (x, y) != (0, 0)]
+    for i in range(n):
+        rand = random_optimizer(100)
+        for t in translations:
+            for i in range(len(rand['locations'])):
+                new_locations = [l if j != i else (
+                    l[0]+t[0], l[1]+t[1]) for j, l in enumerate(rand['locations'])]
+                cost = calc_cost(new_locations)
+                if (cost < optimized['cost']):
+                    optimized = {
+                        'cost': cost,
+                        'locations': new_locations
+                    }
+    return optimized
+
+
 locations = [(0, 0), (6, 1), (2, 2), (5, 3), (4, 4), (7, 5), (1, 6), (2, 6)]
 show_board(locations)
-print(calc_cost(locations))
 
-print(random_optimizer(10))
-print(random_optimizer(50))
-print(random_optimizer(100))
-print(random_optimizer(500))
-print(random_optimizer(1000))
+ns = [10, 50, 100, 500, 1000]
+
+for n in ns:
+    print(steepest_descent_optimizer(n))
