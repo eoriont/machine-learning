@@ -8,7 +8,8 @@ except ImportError as e:
 
 
 class DecisionTree:
-    def __init__(self, split_metric="gini", dependent_variable="class"):
+    def __init__(self, split_metric="gini", dependent_variable="class", max_depth=None):
+        self.max_depth = max_depth
         self.dependent_variable = dependent_variable
         self.split_metric = split_metric
 
@@ -18,7 +19,7 @@ class DecisionTree:
     def fit(self, df):
         self.df = df.append_columns(
             {'id': [i for i in range(df.get_length())]})
-        self.root = Node(self.df, self.dependent_variable)
+        self.root = Node(self.df, self.dependent_variable, max_depth=self.max_depth)
         while self.split():
             pass
 
@@ -27,7 +28,8 @@ class DecisionTree:
 
 
 class Node:
-    def __init__(self, df, dependent_variable):
+    def __init__(self, df, dependent_variable, max_depth=None):
+        self.max_depth = max_depth
         self.dependent_variable = dependent_variable
         self.df = df
         self.row_indices = df.get_column('id')
@@ -50,32 +52,37 @@ class Node:
         self.best_split = (bs[0], bs[1])
 
     def classify(self, obs):
-        if self.impurity == 0:
-            return list(self.class_counts.keys())[0]
-        else:
-            if obs[self.best_split[0]] < self.best_split[1]:
-                return self.low.classify(obs)
+        if self.max_depth is None:
+            if self.impurity == 0:
+                return list(self.class_counts.keys())[0]
             else:
-                return self.high.classify(obs)
+                if obs[self.best_split[0]] < self.best_split[1]:
+                    return self.low.classify(obs)
+                else:
+                    return self.high.classify(obs)
+        else:
+            return max(self.class_counts, key=self.class_counts.get)
 
     def split(self, split_metric):
-        # If haven't split yet
-        if self.low is None:
-            if self.impurity != 0:
-                if split_metric == "random":
-                    row = self.possible_splits.random_row()
-                    s, df = (row[0], row[1]), self.df
-                elif split_metric == "gini":
-                    s, df = self.best_split, self.df
-                self.low = Node(df.select_rows_where(
-                    lambda x: x[s[0]] <= s[1]), self.dependent_variable)
-                self.high = Node(df.select_rows_where(
-                    lambda x: x[s[0]] > s[1]), self.dependent_variable)
-                return True
+        if self.max_depth is None or self.max_depth <= 0:
+            # If haven't split yet
+            if self.low is None:
+                if self.impurity != 0:
+                    new_depth = None if self.max_depth is None else self.max_depth-1
+                    if split_metric == "random":
+                        row = self.possible_splits.random_row()
+                        s, df = (row[0], row[1]), self.df
+                    elif split_metric == "gini":
+                        s, df = self.best_split, self.df
+                    self.low = Node(df.select_rows_where(
+                        lambda x: x[s[0]] <= s[1]), self.dependent_variable, max_depth=new_depth)
+                    self.high = Node(df.select_rows_where(
+                        lambda x: x[s[0]] > s[1]), self.dependent_variable, max_depth=new_depth)
+                    return True
+                else:
+                    return False
             else:
-                return False
-        else:
-            return self.low.split(split_metric) or self.high.split(split_metric)
+                return self.low.split(split_metric) or self.high.split(split_metric)
 
 
 def get_splits_for(col, df, impurity, dv):

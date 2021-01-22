@@ -3,11 +3,12 @@ from dataframe import DataFrame
 
 
 class RandomForest:
-    def __init__(self, n, dependent_variable="class"):
+    def __init__(self, n, dependent_variable="class", max_depth=None):
         self.dependent_variable = dependent_variable
         self.n = n
+        self.max_depth = max_depth
         self.dts = [DecisionTree(
-            split_metric='random', dependent_variable=dependent_variable) for i in range(n)]
+            split_metric='random', dependent_variable=dependent_variable, max_depth=max_depth) for i in range(n)]
 
     def fit(self, df):
         for dt in self.dts:
