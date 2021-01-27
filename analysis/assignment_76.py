@@ -71,5 +71,5 @@ data = organize_datasets()
 for training, testing in data:
     models = fit(training)
     accuracies.append(get_accuracy(models, testing))
-
+accuracies = {x: sum(y[x] for y in accuracies)/len(accuracies) for x in accuracies[0].keys()}
 print(accuracies)

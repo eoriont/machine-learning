@@ -38,18 +38,10 @@ class Node:
         self.class_counts = cc
         self.impurity = gini_impurity(df, dependent_variable)
 
-        ps_array = sum((get_splits_for(x, df, self.impurity, dependent_variable)
-                        for x in df.columns if x not in [dependent_variable, 'id']), [])
-        self.possible_splits = DataFrame.from_array(
-            ps_array, ['feature', 'value', 'goodness of split'])
-
         self.low = None
         self.high = None
 
-        if self.possible_splits.get_length() == 0:
-            return
-        bs = max(self.possible_splits.to_array(), key=lambda x: x[2])
-        self.best_split = (bs[0], bs[1])
+        self.best_split = get_best_split(df, dependent_variable, self.impurity, None)
 
     def classify(self, obs):
         if self.max_depth is None:
@@ -70,13 +62,17 @@ class Node:
                 if self.impurity != 0:
                     new_depth = None if self.max_depth is None else self.max_depth-1
                     if split_metric == "random":
-                        row = self.possible_splits.random_row()
-                        s, df = (row[0], row[1]), self.df
+                        col = random.choice([i for i in self.df.columns if i not in ["id", self.dependent_variable]])
+                        s = get_best_split(self.df, self.dependent_variable, self.impurity, col)
+                        if s is None:
+                            #! This is a hack
+                            self.impurity = 0
+                            return False
                     elif split_metric == "gini":
-                        s, df = self.best_split, self.df
-                    self.low = Node(df.select_rows_where(
+                        s = self.best_split
+                    self.low = Node(self.df.select_rows_where(
                         lambda x: x[s[0]] <= s[1]), self.dependent_variable, max_depth=new_depth)
-                    self.high = Node(df.select_rows_where(
+                    self.high = Node(self.df.select_rows_where(
                         lambda x: x[s[0]] > s[1]), self.dependent_variable, max_depth=new_depth)
                     return True
                 else:
@@ -110,3 +106,17 @@ def gini_impurity(df, dv):
     classes = df.get_column(dv)
     cc = {k: classes.count(k) for k in set(classes)}
     return sum(cc[k]/len(classes) * (1 - cc[k]/len(classes)) for k in cc)
+
+def get_best_split(df, dependent_variable, impurity, col):
+    if col is None:
+        ps_array = sum((get_splits_for(x, df, impurity, dependent_variable)
+                        for x in df.columns if x not in [dependent_variable, 'id']), [])
+    else:
+        ps_array = get_splits_for(col, df, impurity, dependent_variable)
+    possible_splits = DataFrame.from_array(
+        ps_array,
+        ['feature', 'value', 'goodness of split'])
+    if possible_splits.get_length() == 0:
+        return
+    bs = max(possible_splits.to_array(), key=lambda x: x[2])
+    return (bs[0], bs[1])
