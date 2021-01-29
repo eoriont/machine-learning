@@ -42,7 +42,7 @@ do_assert("possible splits", dt.root.possible_splits.round_column('goodness of s
            ['y', 11.5, 0.085],
            ['y', 12.5, 0.276]])
 
-do_assert("best split", dt.root.best_split,
+do_assert("best split", tuple(dt.root.best_split[:2]),
           ('y', 12.5))
 
 # dt.split()
@@ -71,7 +71,7 @@ do_assert("low possible splits", dt.root.low.possible_splits.round_column('goodn
            ['x', 2.5,  0.375],
            ['y', 11.5, 0.042]])
 
-do_assert("low best split", dt.root.low.best_split,
+do_assert("low best split", tuple(dt.root.low.best_split[:2]),
           ('x', 2.5))
 
 # dt.split()
@@ -198,15 +198,15 @@ dt.fit(df)
 #                 (x < 3.5)        (x >= 3.5)
 #                      (1B)        (1A)
 
-do_assert("best split 3", dt.root.best_split,
+do_assert("best split 3", tuple(dt.root.best_split[:2]),
           ('y', 12.5))
-do_assert("best split 4", dt.root.low.best_split,
+do_assert("best split 4", tuple(dt.root.low.best_split[:2]),
           ('x', 2.5))
-do_assert("low low best split", dt.root.low.low.best_split,
+do_assert("low low best split", tuple(dt.root.low.low.best_split[:2]),
           ('y', 11.25))
-do_assert("low high best split", dt.root.low.high.best_split,
+do_assert("low high best split", tuple(dt.root.low.high.best_split[:2]),
           ('y', 10.75))
-do_assert("low high low best split", dt.root.low.high.low.best_split,
+do_assert("low high low best split", tuple(dt.root.low.high.low.best_split[:2]),
           ('x', 3.5))
 
 do_assert("classify 1", dt.classify({'x': 2, 'y': 11.5}),
@@ -220,8 +220,37 @@ do_assert("classify 4", dt.classify({'x': 3.25, 'y': 10.5}),
 do_assert("classify 5", dt.classify({'x': 3.75, 'y': 10.5}),
           'A')
 
-# Unsure how to test this as it is random
-dt = DecisionTree(split_metric='random')
-dt.fit(df)
+print(cstring("&6All initial testspassed!"))
 
-print(cstring("&6 All tests passed!"))
+def test_dataset(df):
+    dt_random = DecisionTree("random", dependent_variable="label")
+    dt_random.fit(df)
+
+    accurate = 0
+    for row in df.to_json():
+        l = dt_random.classify(row)
+        if l == row['label']:
+            accurate += 1
+    return accurate/ df.get_length()
+
+dataset = [(x, y, 'positive' if x*y>0 else 'negative') for x in range(-5, 6) for y in range(-5, 6) if 0 not in (x, y)]
+df = DataFrame.from_array(dataset, ['x', 'y', 'label'])
+do_assert("rf 1", test_dataset(df), 1)
+
+dataset = [(x, y, 'A') for x in range(-5, 6) for y in range(-5, 6) if 0 not in (x, y)]
+dataset += [(x, y, 'B') for x in range(1, 6) for y in range(1, 6)]
+dataset += [(x, y, 'B') for x in range(1, 6) for y in range(1, 6)]
+df = DataFrame.from_array(dataset, ['x', 'y', 'label'])
+do_assert("rf 2", round(test_dataset(df), 2), 0.83)
+
+dataset = [(x, y, z, 'positive' if x*y*z>0 else 'negative') for x in range(-5, 6) for y in range(-5, 6) for z in range(-5, 6) if 0 not in (x, y, z)]
+df = DataFrame.from_array(dataset, ['x', 'y', 'z', 'label'])
+do_assert("rf 3", test_dataset(df), 1)
+
+dataset = [(x, y, z, 'A') for x in range(-5, 6) for y in range(-5, 6) for z in range(-5, 6) if 0 not in (x, y, z)]
+dataset += [(x, y, z, 'B') for x in range(1, 6) for y in range(1, 6) for z in range(1, 6)]
+dataset += [(x, y, z, 'B') for x in range(1, 6) for y in range(1, 6) for z in range(1, 6)]
+df = DataFrame.from_array(dataset, ['x', 'y', 'z', 'label'])
+do_assert("rf 4", test_dataset(df), 0.9)
+
+print(cstring("&6All random tests passed!"))

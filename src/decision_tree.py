@@ -41,12 +41,15 @@ class Node:
         self.low = None
         self.high = None
 
+        self.possible_splits = DataFrame.from_array(sum((get_splits_for(x, df, self.impurity, dependent_variable)
+                        for x in df.columns if x not in [dependent_variable, 'id']), []), ['col', 'split', 'goodness of split'])
+
         self.best_split = get_best_split(df, dependent_variable, self.impurity, None)
 
     def classify(self, obs):
         if self.max_depth is None:
             if self.impurity == 0:
-                return list(self.class_counts.keys())[0]
+                return max(self.class_counts, key=lambda x: self.class_counts[x])
             else:
                 if obs[self.best_split[0]] < self.best_split[1]:
                     return self.low.classify(obs)
@@ -62,12 +65,12 @@ class Node:
                 if self.impurity != 0:
                     new_depth = None if self.max_depth is None else self.max_depth-1
                     if split_metric == "random":
-                        col = random.choice([i for i in self.df.columns if i not in ["id", self.dependent_variable]])
-                        s = get_best_split(self.df, self.dependent_variable, self.impurity, col)
+                        s = get_random_split_column(self.df, self.dependent_variable, self.impurity)
                         if s is None:
-                            #! This is a hack
+                            #! This is still a hack
                             self.impurity = 0
                             return False
+                        self.best_split = s
                     elif split_metric == "gini":
                         s = self.best_split
                     self.low = Node(self.df.select_rows_where(
@@ -119,4 +122,14 @@ def get_best_split(df, dependent_variable, impurity, col):
     if possible_splits.get_length() == 0:
         return
     bs = max(possible_splits.to_array(), key=lambda x: x[2])
-    return (bs[0], bs[1])
+    return bs
+
+def get_random_split_column(df, dv, impurity):
+    visited = []
+    while len(visited) < len(df.columns)-2:
+        col = random.choice([i for i in df.columns if i not in ["id", dv]+visited])
+        s = get_best_split(df, dv, impurity, col)
+        if s is not None:
+            return s
+        visited += col
+    return None
