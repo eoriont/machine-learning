@@ -94,11 +94,11 @@ def get_splits_for(col, df, impurity, dv):
     for i in range(ordered.get_length() - 1):
         split = sum(x[col] for x in ordered.select_rows([i, i+1]).to_json())/2
 
-        # Get low and high and calculate impurity/goodness
+        # Get low and high
         low = df.select_rows_where(lambda x: x[col] <= split)
         high = df.select_rows_where(lambda x: x[col] > split)
-        s = low.get_length() * gini_impurity(low, dv) + \
-            high.get_length() * gini_impurity(high, dv)
+
+        # Calculate goodness
         s = sum(x.get_length() * gini_impurity(x, dv) for x in [low, high])
         goodness = impurity - s/df.get_length()
         ps.append([col, split, goodness])
@@ -125,11 +125,10 @@ def get_best_split(df, dependent_variable, impurity, col):
     return bs
 
 def get_random_split_column(df, dv, impurity):
-    visited = []
-    while len(visited) < len(df.columns)-2:
-        col = random.choice([i for i in df.columns if i not in ["id", dv]+visited])
-        s = get_best_split(df, dv, impurity, col)
-        if s is not None:
+    best_splits = [get_best_split(df, dv, impurity, col) for col in df.columns if col not in ["id", dv]]
+    while len(best_splits) > 0:
+        s = random.choice(best_splits)
+        best_splits.remove(s)
+        if s != None:
             return s
-        visited += col
     return None

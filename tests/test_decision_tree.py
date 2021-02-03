@@ -220,7 +220,7 @@ do_assert("classify 4", dt.classify({'x': 3.25, 'y': 10.5}),
 do_assert("classify 5", dt.classify({'x': 3.75, 'y': 10.5}),
           'A')
 
-print(cstring("&6All initial testspassed!"))
+print(cstring("&6All initial tests passed!"))
 
 def test_dataset(df):
     dt_random = DecisionTree("random", dependent_variable="label")
@@ -254,3 +254,9 @@ df = DataFrame.from_array(dataset, ['x', 'y', 'z', 'label'])
 do_assert("rf 4", test_dataset(df), 0.9)
 
 print(cstring("&6All random tests passed!"))
+
+dataset = [(x, y, "positive" if x > 0 or y > 0 else "negative") for x in range(-5, 6) for y in range(-5, 6)]
+df = DataFrame.from_array(dataset, ['x', 'y', 'label'])
+do_assert("Random decision tree accurate", test_dataset(df), 1.0)
+
+print(cstring("&6New random test"))
