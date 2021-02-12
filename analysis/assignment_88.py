@@ -1,5 +1,6 @@
 import sys
 import os
+import random
 sys.path.append("src")
 try:
     from dataframe import DataFrame
@@ -9,6 +10,7 @@ except ImportError as e:
     print(e)
     sys.exit()
 
+random.seed(0)
 
 # Get 50%:50% testing data to training data in tuples
 def organize_datasets():
