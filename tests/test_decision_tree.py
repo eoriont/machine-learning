@@ -231,7 +231,7 @@ def test_dataset(df):
         l = dt_random.classify(row)
         if l == row['label']:
             accurate += 1
-    return accurate/ df.get_length()
+    return accurate/ len(df)
 
 dataset = [(x, y, 'positive' if x*y>0 else 'negative') for x in range(-5, 6) for y in range(-5, 6) if 0 not in (x, y)]
 df = DataFrame.from_array(dataset, ['x', 'y', 'label'])

@@ -59,7 +59,7 @@ do_assert("accuracy", cv.accuracy(),
 # Row 18 -- True Class is Shortbread; Predicted Class was Shortbread
 
 accuracies = []
-for k in range(1, df.get_length()-1):
+for k in range(1, len(df)-1):
     knn = KNearestNeighborsClassifier(k)
     cv = LeaveOneOutCrossValidator(knn, df, prediction_column='Cookie Type')
     accuracies.append(cv.accuracy())

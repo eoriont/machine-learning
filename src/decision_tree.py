@@ -18,10 +18,12 @@ class DecisionTree:
 
     def fit(self, df):
         df = df.append_columns({
-                'id': [i for i in range(df.get_length())]
-            }).select_rows(
-                [random.randint(0, df.get_length())
-                    for _ in range(math.floor(df.get_length() * self.training_percentage))]
+                'id': [i for i in range(len(df))]
+            })
+        if self.training_percentage < 1:
+            df = df.select_rows(
+                [random.randint(0, len(df))
+                    for _ in range(math.floor(len(df) * self.training_percentage))]
             )
         self.root = DecisionTreeNode(df, self.dependent_variable, max_depth=self.max_depth)
         while self.split():

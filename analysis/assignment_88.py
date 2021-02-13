@@ -15,9 +15,9 @@ random.seed(0)
 # Get 50%:50% testing data to training data in tuples
 def organize_datasets():
     path = os.path.join(os.getcwd(), 'datasets', 'freshman_lbs.csv')
-    df = DataFrame.from_csv(path, False)
-    l = df.get_length()
-    return df.select_rows(range(l//2)), df.select_rows(range(l//2, l+1))
+    df = DataFrame.from_csv(path, False).remove_columns(["Weight (lbs, Apr)", "BMI (Apr)"])
+    l = len(df)
+    return df.select_rows(range(l//2+1)), df.select_rows(range(l//2+1, l+1))
 
 # Pass in the training data
 def fit(data):
@@ -28,15 +28,9 @@ def fit(data):
 
 # Pass in the testing data
 def get_accuracy(model, data):
-    # return sum(1 for row in data.to_json() if model.classify(row) == row["Sex"]) / data.get_length()
-    accuracy = 0
-    for i, row in enumerate(data.to_json()):
-        if model.classify(row) == row["Sex"]:
-            accuracy += 1
-        else:
-            print(i + training.get_length())
-    accuracy /= data.get_length()
-    return accuracy
+    misclassified = [i+len(training) for i, row in enumerate(data.to_json()) if model.classify(row) != row["Sex"]]
+    print(misclassified)
+    return (len(data)-len(misclassified))/len(data)
 
 
 training, testing = organize_datasets()

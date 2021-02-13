@@ -32,9 +32,9 @@ names = ['Cookie Type', 'Portion Eggs',
          'Portion Butter', 'Portion Sugar', 'Portion Flour']
 df = DataFrame.from_array(data, names)
 percents = []
-for i in range(1, df.get_length()):
+for i in range(1, len(df)):
     trials = []
-    for j in range(df.get_length()):
+    for j in range(len(df)):
         df1, entry = df.remove_entry(j)
         knn = KNearestNeighborsClassifier(df1, prediction_column="Cookie Type")
         trials.append(knn.classify(entry, k=i) == entry["Cookie Type"])

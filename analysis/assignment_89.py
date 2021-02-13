@@ -44,14 +44,14 @@ def get_accuracy(models, data):
         for row in data.to_json():
             if m.classify(row) == row["Sex"]:
                 accuracy[name] += 1
-        accuracy[name] /= data.get_length()
+        accuracy[name] /= len(data)
     print("Got accuracies")
     return accuracy
 
 
 path = os.path.join(os.getcwd(), 'datasets', 'freshman_lbs.csv')
 df = DataFrame.from_csv(path, False)
-l = df.get_length()
+l = len(df)
 training, testing = df.select_rows(range(l//2)), df.select_rows(range(l//2, l))
 
 models = fit(training)

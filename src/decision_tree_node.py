@@ -80,7 +80,7 @@ class DecisionTreeNode:
 
         # Go through each 2 rows and split down middle
         ps = []
-        for i in range(ordered.get_length() - 1):
+        for i in range(len(ordered) - 1):
             split = sum(x[col] for x in ordered.select_rows([i, i+1]).to_json())/2
 
             # Get low and high
@@ -88,8 +88,8 @@ class DecisionTreeNode:
             high = self.df.select_rows_where(lambda x: x[col] > split)
 
             # Calculate goodness
-            s = sum(x.get_length() * self.gini_impurity(x) for x in [low, high])
-            goodness = self.impurity - s/self.df.get_length()
+            s = sum(len(x) * self.gini_impurity(x) for x in [low, high])
+            goodness = self.impurity - s/len(self.df)
             ps.append([col, split, goodness])
         return ps
 
@@ -103,10 +103,11 @@ class DecisionTreeNode:
         else:
             # Get possible splits for col
             ps_array = self.get_splits_for(col)
+
         possible_splits = DataFrame.from_array(
             ps_array,
             ['feature', 'value', 'goodness of split'])
-        if possible_splits.get_length() == 0:
+        if len(possible_splits) == 0:
             return
 
         # Return split with best 'goodness of split'

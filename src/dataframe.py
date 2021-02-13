@@ -134,7 +134,7 @@ class DataFrame:
         else:
             raise Exception("Accessing column that doesn't exist!")
 
-    def get_length(self):
+    def __len__(self):
         try:
             return len(next(iter(self.data_dict.values())))
         except StopIteration:

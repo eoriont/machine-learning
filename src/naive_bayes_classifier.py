@@ -12,8 +12,8 @@ class NaiveBayesClassifier:
     def conditional_probability(self, criteria, given):
         given_arr = self.df.select_rows_where(
             lambda x: x[given[0]] == given[1])
-        cprob = given_arr.select_rows_where(
-            lambda x: x[criteria[0]] == criteria[1]).get_length()/given_arr.get_length()
+        cprob = len(given_arr.select_rows_where(
+            lambda x: x[criteria[0]] == criteria[1]))/len(given_arr)
         return cprob
 
     def likelihood(self, given, observed):

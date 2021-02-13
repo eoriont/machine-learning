@@ -14,7 +14,7 @@ except ImportError as e:
 def organize_datasets():
     path = os.path.join(os.getcwd(), 'datasets', 'freshman_lbs.csv')
     df = DataFrame.from_csv(path, False)
-    l = df.get_length()
+    l = len(df)
     s = set(i for i in range(l))
     data = []
     for i in range(5):
@@ -61,7 +61,7 @@ def get_accuracy(models, data):
         for row in data.to_json():
             if m.classify(row) == row["Sex"]:
                 accuracy[name] += 1
-        accuracy[name] /= data.get_length()
+        accuracy[name] /= len(data)
     print("Got accuracies")
     return accuracy
 
