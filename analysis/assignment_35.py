@@ -1,14 +1,8 @@
 import sys
 import math
-sys.path.append("src")
-sys.path.append("tests")
-try:
-    from matrix import Matrix
-    from featurizer import Featurizer
-    from otest import do_assert
-    from deprecated_polynomial_regressor import PolynomialRegressor
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from featurizer import Featurizer
+from deprecated_polynomial_regressor import PolynomialRegressor
 
 
 roast_beef = [0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 5, 5, 5, 5]

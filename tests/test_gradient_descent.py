@@ -1,10 +1,7 @@
 from otest import do_assert
 import sys
-sys.path.append('src')
-try:
-    from gradient_descent import GradientDescent
-except ImportError as err:
-    print(err)
+sys.path.append('src/models')
+from gradient_descent import GradientDescent
 
 
 def single_variable_function(x):

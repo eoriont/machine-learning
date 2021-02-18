@@ -6,7 +6,7 @@ class LeaveOneOutCrossValidator:
 
     def accuracy(self):
         trials = []
-        for j in range(len(df)):
+        for j in range(len(self.df)):
             df1, entry = self.df.remove_entry(j)
             self.knn.fit(df1, self.prediction_column)
             trials.append(self.knn.classify(entry) ==

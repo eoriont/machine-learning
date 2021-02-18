@@ -1,12 +1,9 @@
 import sys
-sys.path.append("src")
+sys.path.append("src/models")
 sys.path.append("tests")
-try:
-    from matrix import Matrix
-    from featurizer import Featurizer
-    from otest import do_assert
-except ImportError as e:
-    print(e)
+from matrix import Matrix
+from featurizer import Featurizer
+from otest import do_assert
 
 
 roast_beef = [0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 5, 5, 5, 5]

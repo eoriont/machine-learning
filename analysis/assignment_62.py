@@ -1,11 +1,8 @@
 import random
 import sys
-sys.path.append("src")
-try:
-    from dataframe import DataFrame
-    from linear_regressor import LinearRegressor
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from dataframe import DataFrame
+from linear_regressor import LinearRegressor
 
 dataset = [(i/10, 3 + 0.005*i**2 + random.randrange(-5, 5))
            for i in range(100)]

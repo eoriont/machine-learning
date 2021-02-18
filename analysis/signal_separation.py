@@ -1,12 +1,8 @@
 import sys
 import math
-sys.path.append("src")
-try:
-    from linear_regressor import LinearRegressor
-    from matrix import Matrix
-    from dataframe import DataFrame
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from linear_regressor import LinearRegressor
+from dataframe import DataFrame
 
 #! Part A
 data = [(0.0, 4.0),

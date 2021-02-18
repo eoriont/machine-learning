@@ -1,13 +1,9 @@
 import sys
 import os
-sys.path.append("src")
-try:
-    from dataframe import DataFrame
-    from random_forest import RandomForest
-    from decision_tree import DecisionTree
-except ImportError as e:
-    print(e)
-    sys.exit()
+sys.path.append("src/models")
+from dataframe import DataFrame
+from random_forest import RandomForest
+from decision_tree import DecisionTree
 
 
 # Get 20%:80% testing data to training data in tuples

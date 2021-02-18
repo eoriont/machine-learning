@@ -1,6 +1,4 @@
-import math
 from matrix import Matrix
-
 
 class LinearRegressor:
     def __init__(self, df, prediction_column):

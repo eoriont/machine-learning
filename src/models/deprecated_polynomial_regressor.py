@@ -1,7 +1,6 @@
 from matrix import Matrix
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-import math
 
 
 class PolynomialRegressor:

@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path.append("src")
+sys.path.append("src/models")
 from dataframe import DataFrame
 from random_forest import RandomForest
 from decision_tree import DecisionTree

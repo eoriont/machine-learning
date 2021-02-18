@@ -1,11 +1,7 @@
-import math
 import sys
-sys.path.append('src')
-try:
-    from dataframe import DataFrame
-    from logistic_regressor import LogisticRegressor
-except ImportError as e:
-    print(e)
+sys.path.append('src/models')
+from dataframe import DataFrame
+from logistic_regressor import LogisticRegressor
 
 
 def trim(x):

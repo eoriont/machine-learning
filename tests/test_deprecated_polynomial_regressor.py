@@ -1,10 +1,7 @@
 from otest import do_assert
 import sys
-sys.path.append('src')
-try:
-    from polynomial_regressor import PolynomialRegressor
-except ImportError as err:
-    raise err
+sys.path.append('src/models')
+from deprecated_polynomial_regressor import PolynomialRegressor
 
 
 def round_down(t, precision=6):

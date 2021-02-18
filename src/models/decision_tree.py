@@ -1,10 +1,8 @@
 import sys
 import random
 import math
-sys.path.append('src')
+sys.path.append('src/models')
 from decision_tree_node import DecisionTreeNode
-from dataframe import DataFrame
-
 
 class DecisionTree:
     def __init__(self, split_metric="gini", dependent_variable="class", max_depth=None, training_percentage=1):

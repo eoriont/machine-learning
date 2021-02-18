@@ -1,9 +1,6 @@
 import sys
-sys.path.append("src")
-try:
-    from matrix import Matrix
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from matrix import Matrix
 
 #   1 * beta_0 + 0 * beta_1 + 0 * beta_2 = 1
 #   1 * beta_0 + 1 * beta_1 + 0 * beta_2 = 2

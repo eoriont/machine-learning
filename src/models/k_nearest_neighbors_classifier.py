@@ -1,6 +1,5 @@
 from dataframe import DataFrame
 
-
 class KNearestNeighborsClassifier:
     def __init__(self, k):
         self.k = k

@@ -1,6 +1,5 @@
 import math
 
-
 class NaiveBayesClassifier:
     def __init__(self, df, dependent_variable):
         self.df = df

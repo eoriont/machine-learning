@@ -1,11 +1,8 @@
 import sys
-sys.path.append('src')
-try:
-    from dataframe import DataFrame
-    from k_nearest_neighbors_classifier import KNearestNeighborsClassifier
-    from otest import do_assert
-except ImportError as e:
-    print(e)
+sys.path.append('src/models')
+from dataframe import DataFrame
+from k_nearest_neighbors_classifier import KNearestNeighborsClassifier
+from otest import do_assert
 
 df = DataFrame.from_array(
     [['Shortbread',     0.14,       0.14,      0.28,     0.44],

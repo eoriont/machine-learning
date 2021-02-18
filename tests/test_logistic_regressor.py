@@ -1,11 +1,8 @@
 import sys
-sys.path.append("src")
-try:
-    from otest import do_assert, color_print
-    from dataframe import DataFrame
-    from logistic_regressor import LogisticRegressor
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from otest import do_assert
+from dataframe import DataFrame
+from logistic_regressor import LogisticRegressor
 
 
 def _round(x):

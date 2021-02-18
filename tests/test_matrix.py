@@ -1,10 +1,7 @@
 from otest import do_assert, assert_exception
 import sys
-sys.path.append('src')
-try:
-    from matrix import Matrix
-except ImportError as err:
-    print(err)
+sys.path.append('src/models')
+from matrix import Matrix
 
 
 # ARITHMETIC TESTS

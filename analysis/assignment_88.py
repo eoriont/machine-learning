@@ -1,14 +1,9 @@
 import sys
 import os
 import random
-sys.path.append("src")
-try:
-    from dataframe import DataFrame
-    from random_forest import RandomForest
-    from decision_tree import DecisionTree
-except ImportError as e:
-    print(e)
-    sys.exit()
+sys.path.append("src/models")
+from dataframe import DataFrame
+from decision_tree import DecisionTree
 
 random.seed(0)
 

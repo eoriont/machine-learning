@@ -1,11 +1,7 @@
 import sys
 import math
-sys.path.append("src")
-try:
-    from matrix import Matrix
-    from deprecated_polynomial_regressor import PolynomialRegressor
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from deprecated_polynomial_regressor import PolynomialRegressor
 
 
 def main(data):

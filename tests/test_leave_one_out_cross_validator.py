@@ -1,12 +1,9 @@
 import sys
 from otest import do_assert
-sys.path.append("src")
-try:
-    from k_nearest_neighbors_classifier import KNearestNeighborsClassifier
-    from leave_one_out_cross_validator import LeaveOneOutCrossValidator
-    from dataframe import DataFrame
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from k_nearest_neighbors_classifier import KNearestNeighborsClassifier
+from leave_one_out_cross_validator import LeaveOneOutCrossValidator
+from dataframe import DataFrame
 
 df = DataFrame.from_array(
     [['Shortbread',     0.14,       0.14,      0.28,     0.44],

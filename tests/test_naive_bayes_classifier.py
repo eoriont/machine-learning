@@ -1,11 +1,8 @@
 import sys
-sys.path.append("src")
-try:
-    from naive_bayes_classifier import NaiveBayesClassifier
-    from dataframe import DataFrame
-    from otest import do_assert
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from naive_bayes_classifier import NaiveBayesClassifier
+from dataframe import DataFrame
+from otest import do_assert
 
 df = DataFrame.from_array(
     [

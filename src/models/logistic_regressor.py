@@ -1,5 +1,4 @@
 import math
-from matrix import Matrix
 from linear_regressor import LinearRegressor
 
 

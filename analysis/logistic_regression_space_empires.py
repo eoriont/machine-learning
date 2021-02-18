@@ -1,12 +1,8 @@
 import math
 import sys
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MultipleLocator
-sys.path.append("src")
-try:
-    from deprecated_polynomial_regressor import PolynomialRegressor
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from deprecated_polynomial_regressor import PolynomialRegressor
 
 
 # Fit y to the function

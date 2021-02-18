@@ -1,11 +1,8 @@
 import sys
-sys.path.append("src")
-try:
-    from decision_tree import DecisionTree
-    from dataframe import DataFrame
-    from otest import do_assert, cstring
-except ImportError as e:
-    print(e)
+sys.path.append("src/models")
+from decision_tree import DecisionTree
+from dataframe import DataFrame
+from otest import do_assert, cstring
 
 
 df = DataFrame.from_array(

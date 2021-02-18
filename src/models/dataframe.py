@@ -1,6 +1,4 @@
-import os
 import random
-
 
 class DataFrame:
     def __init__(self, data_dict, column_order=None):

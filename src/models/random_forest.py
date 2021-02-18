@@ -1,7 +1,6 @@
 from decision_tree import DecisionTree
 from dataframe import DataFrame
 
-
 class RandomForest:
     def __init__(self, n, dependent_variable="class", max_depth=None, training_percentage=1):
         self.dependent_variable = dependent_variable
