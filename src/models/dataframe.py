@@ -175,35 +175,31 @@ class DataFrame:
     @classmethod
     def from_csv(self, path_to_csv, header=True):
         with open(path_to_csv, "r") as file:
-            lines = [[parse_str(i.strip()) for i in split_row(x)]
-                     for x in file.read().split("\n") if x.strip()]
-            head = lines[0]
-            entries = lines[1:] if not header else lines
-            return DataFrame.from_array(entries, head)
+            s = file.read()
+            data = [[]]
+            for x in _reader(s):
+                data[-1].append(x[1])
+                if x[0] == "\n":
+                    data.append([])
+            return DataFrame.from_array(data[:-1], data[0])
 
-
-def parse_str(s):
-    if s[0] == "\"":
-        return s[1:]
-    else:
-        try:
-            return int(s)
-        except ValueError:
-            return float(s)
-
-
-def split_row(s):
-    vals = ["\""+x for x in s.split("\"") if x]
-    instr = s[0] == "\""
-    newvals = []
-    for v in vals:
-        if instr:
-            newvals.append(v)
-        elif v == "\", ":
-            instr = True
-            continue
+def _reader(s):
+    in_str = False
+    current_val = ""
+    for x in s:
+        if x == "\"":
+            in_str = not in_str
+        if not in_str and x in (",", "\n"):
+            yield x, _parse_val(current_val)
+            current_val = ""
         else:
-            instr = False
-            newvals += [x for x in v[1:].split(", ") if x]
-        instr = not instr
-    return newvals
+            current_val += x
+
+def _parse_val(v):
+    v = v.strip()
+    try: return int(v)
+    except ValueError:
+        try: return float(v)
+        except ValueError:
+            if v[0] == "\"": return v[1:-1]
+            else: return str(v)

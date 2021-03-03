@@ -55,6 +55,7 @@ if __name__ == "__main__":
     # print(nn.weights)
     # # should be really close to
     # #     {(0,2): 1, (1,2): 2}
+
     import math
     weights = {(0,2): -0.1, (1,2): 0.5}
 
