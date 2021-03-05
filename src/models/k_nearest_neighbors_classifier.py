@@ -1,10 +1,17 @@
 from dataframe import DataFrame
 
 class KNearestNeighborsClassifier:
-    def __init__(self, k):
+    def __init__(self, k, metric="euclidian"):
         self.k = k
+        self.metric = metric
 
-    def fit(self, df, dependent_variable):
+    def fit(self, df, dependent_variable ):
+        if self.metric == "manhattan":
+            for x in df.columns:
+                low, high = df.min(x), df.max(x)
+                if low == high:
+                    continue
+                df = df.apply(x, lambda x: (x - low)/(high - low))
         self.df = df
         self.dependent_variable = dependent_variable
 
@@ -41,6 +48,9 @@ class KNearestNeighborsClassifier:
             return min(avgs, key=avgs.get)
         else:
             return max_key
+
+    def predict(self, obs):
+        return self.classify(obs)
 
 
 def dist(p1, p2):

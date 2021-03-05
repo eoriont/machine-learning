@@ -24,8 +24,10 @@ class DataFrame:
 
     def cartesian_product(self):
         l = []
-        [l.append((x, y)) for x in self.columns for y in self.columns if x != y and (
-            y, x) not in l]
+        for x in self.columns:
+            for y in self.columns:
+                if x != y and (y, x) not in l:
+                    l.append((x, y))
         return l
 
     @classmethod
@@ -34,6 +36,10 @@ class DataFrame:
 
     def filter_columns(self, cols):
         return DataFrame(self.data_dict, cols)
+
+    def include_column(self, col):
+        d, c = self.get_data_copies()
+        return DataFrame(d, c+[col])
 
     def get_data_copies(self):
         return {k: v.copy() for k, v in self.data_dict.items()}, self.columns.copy()
@@ -120,8 +126,11 @@ class DataFrame:
         return DataFrame(d, c)
 
     def order_by(self, col, ascending=True):
-        return DataFrame.from_array(sorted(self.to_array(), key=lambda x: x[self.columns.index(
-            col)], reverse=not ascending), self.columns)
+        return DataFrame.from_array(sorted(
+            self.to_array(),
+            key=lambda x: x[self.columns.index(col)],
+            reverse=not ascending
+        ), self.columns)
 
     def get_column(self, col):
         if col in self.columns:
@@ -145,11 +154,6 @@ class DataFrame:
             entry[col] = d[col][index]
             del d[col][index]
         return DataFrame(d, c), entry
-
-    def column_operation(self, col, op):
-        d, c = self.get_data_copies()
-        d[col] = [op(x) for x in d[col]]
-        return DataFrame(d, c)
 
     def to_json(self):
         return [self.to_entry(arr) for arr in self.to_array()]
@@ -181,7 +185,28 @@ class DataFrame:
                 data[-1].append(x[1])
                 if x[0] == "\n":
                     data.append([])
-            return DataFrame.from_array(data[:-1], data[0])
+            return DataFrame.from_array(data[1:-1], data[0])
+
+    def min(self, col):
+        return min(self.data_dict[col])
+
+    def max(self, col):
+        return max(self.data_dict[col])
+
+    def save_csv(self, path_to_csv):
+        with open(path_to_csv, "w") as file:
+            for i, col in enumerate(self.columns):
+                file.write(str(col))
+                if i+1 < len(self.columns):
+                    file.write(",")
+            file.write("\n")
+            for row in self.to_array():
+                for i, val in enumerate(row):
+                    file.write(str(val))
+                    if i+1 < len(row):
+                        file.write(",")
+                file.write("\n")
+
 
 def _reader(s):
     in_str = False
@@ -197,6 +222,7 @@ def _reader(s):
 
 def _parse_val(v):
     v = v.strip()
+    if len(v) == 0: return ""
     try: return int(v)
     except ValueError:
         try: return float(v)

@@ -22,10 +22,8 @@ class LinearRegressor:
 
     def predict(self, inputs):
         full_inputs = self.gather_all_inputs(inputs)
-        zipped = []
-        for k, v in full_inputs.items():
-            zipped.append([v, self.coefficients[k]])
-
+        zipped = [(v, self.coefficients[k]) for k, v in full_inputs.items()
+                                            if k in self.df.columns and k != self.prediction_column]
         return sum(x*y for x, y in zipped)
 
     def round_coefficients(self):

@@ -24,6 +24,9 @@ class RandomForest:
         amt = {k: predictions.count(k) for k in set(predictions)}
         return max(amt, key=lambda x: amt[x])
 
+    def predict(self, obs):
+        return self.classify(obs)
+
 
 if __name__ == "__main__":
     rf = RandomForest(5)

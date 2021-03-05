@@ -18,9 +18,10 @@ class NaiveBayesClassifier:
     def likelihood(self, given, observed):
         return math.prod(self.conditional_probability(x, given) for x in observed.items()) * self.probability(*given)
 
-    # I'd like to change this garbage but we don't pass in the column
     def classify(self, observed):
-        to_classify = (set(self.df.columns) - set(observed.keys())).pop()
-        l = {x: self.likelihood((to_classify, x), observed)
+        l = {x: self.likelihood((self.dependent_variable, x), observed)
              for x in [True, False]}
-        return to_classify, max(l, key=l.get)
+        return max(l, key=l.get)
+
+    def predict(self, obs):
+        return self.classify(obs)

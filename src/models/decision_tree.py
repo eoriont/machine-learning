@@ -29,3 +29,6 @@ class DecisionTree:
 
     def classify(self, obs):
         return self.root.classify(obs)
+
+    def predict(self, obs):
+        return self.classify(obs)

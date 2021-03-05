@@ -27,7 +27,7 @@ data = [[1, 95, 33, 1, 0],
 df = DataFrame.from_array(
     data, ['accepted', 'percentile', 'score', 'academicec', 'sportsec'])
 df = df.append_columns(
-    {'const': [1 for _ in data]}).column_operation('accepted', trim)
+    {'const': [1 for _ in data]}).apply('accepted', trim)
 
 print(df.data_dict)
 
