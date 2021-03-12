@@ -177,15 +177,12 @@ class DataFrame:
         return random.choice(self.to_array())
 
     @classmethod
-    def from_csv(self, path_to_csv, header=True):
+    def from_csv(cls, path_to_csv, data_types, parser):
         with open(path_to_csv, "r") as file:
-            s = file.read()
-            data = [[]]
-            for x in _reader(s):
-                data[-1].append(x[1])
-                if x[0] == "\n":
-                    data.append([])
-            return DataFrame.from_array(data[1:-1], data[0])
+            s = file.read().split("\n")
+            # head = parser(s[0])
+            data = [[None if val.strip() == "" else t(val.strip()) for t, val in zip(data_types.values(), parser(x))] for x in s[1:] if x.strip() != ""]
+            return cls.from_array(data, list(data_types.keys()))
 
     def min(self, col):
         return min(self.data_dict[col])
