@@ -104,6 +104,12 @@ class DataFrame:
         d[column] = [func(x) for x in d[column]]
         return DataFrame(d, c)
 
+    def apply_new(self, column, new_col, func):
+        d, c = self.get_data_copies()
+        d[new_col] = [func(x) for x in d[column]]
+        return DataFrame(d, c+[new_col])
+
+
     # This is the same as filter_columns
     def select_columns(self, cols):
         return DataFrame(self.data_dict, cols)
@@ -203,26 +209,3 @@ class DataFrame:
                     if i+1 < len(row):
                         file.write(",")
                 file.write("\n")
-
-
-def _reader(s):
-    in_str = False
-    current_val = ""
-    for x in s:
-        if x == "\"":
-            in_str = not in_str
-        if not in_str and x in (",", "\n"):
-            yield x, _parse_val(current_val)
-            current_val = ""
-        else:
-            current_val += x
-
-def _parse_val(v):
-    v = v.strip()
-    if len(v) == 0: return ""
-    try: return int(v)
-    except ValueError:
-        try: return float(v)
-        except ValueError:
-            if v[0] == "\"": return v[1:-1]
-            else: return str(v)
