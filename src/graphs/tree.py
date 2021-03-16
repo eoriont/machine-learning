@@ -44,7 +44,3 @@ class Tree:
                 else:
                     edges.append(edge)
         return Tree(0, current_node)
-
-
-print(Tree.build_from_edges([('b', 'a'), ('c', 'd'), ('e', 'b'),
-                             ('f', 'e'), ('g', 'c'), ('h', 'f'), ('f', 'g'), ('h', 'b')]).root.data)
