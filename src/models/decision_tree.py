@@ -1,6 +1,4 @@
-import sys
-import random
-import math
+import sys, random, math
 sys.path.append('src/models')
 from decision_tree_node import DecisionTreeNode
 
