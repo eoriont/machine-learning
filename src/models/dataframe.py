@@ -1,10 +1,10 @@
+from os import name
 import random
 
 class DataFrame:
-    def __init__(self, data_dict, column_order=None):
+    def __init__(self, data_dict, columns=None):
         self.data_dict = data_dict
-        self.columns = list(
-            data_dict) if column_order is None else column_order
+        self.columns = list(data_dict) if columns is None else columns
 
     def to_array(self):
         if self.columns[0] in self.data_dict:
@@ -32,7 +32,7 @@ class DataFrame:
 
     @classmethod
     def from_array(cls, arr, cols):
-        return DataFrame({c: list(a) for c, a in zip(cols, zip(*arr))}, cols)
+        return cls({c: list(a) for c, a in zip(cols, zip(*arr))}, cols)
 
     def filter_columns(self, cols):
         return DataFrame(self.data_dict, cols)
@@ -111,14 +111,14 @@ class DataFrame:
 
 
     # This is the same as filter_columns
-    def select_columns(self, cols):
+    def select(self, cols):
         return DataFrame(self.data_dict, cols)
 
     def select_rows(self, rows):
         arr = self.to_array()
         return DataFrame.from_array((x for i, x in enumerate(arr) if i in rows), self.columns)
 
-    def select_rows_where(self, func):
+    def where(self, func):
         arr = self.to_array()
         return DataFrame.from_array((x for x in arr if func(self.to_entry(x))), self.columns)
 
@@ -209,3 +209,31 @@ class DataFrame:
                     if i+1 < len(row):
                         file.write(",")
                 file.write("\n")
+
+    # Bad bad bad bad
+    def group_by(self, column):
+        names = []
+        new_rows = []
+        for i, x in enumerate(self.get_column(column)):
+            if x not in names:
+                names.append(x)
+                new_rows.append([])
+            new_rows[names.index(x)].append(i)
+
+        x = [[[y for j, y in enumerate(self.get_column(col)) if j in new_rows[i]] if col != column else names[i] for col in self.columns] for i in range(len(names))]
+        return DataFrame.from_array(x, self.columns)
+
+    def aggregate(self, col, method):
+        d, c = self.get_data_copies()
+        d[col] = [DataFrame.get_methods()[method](x) for x in self.get_column(col)]
+        return DataFrame(d, c)
+
+    @staticmethod
+    def get_methods():
+        return {
+            'count': lambda x: len(x),
+            'max': lambda x: max(x),
+            'min': lambda x: min(x),
+            'sum': lambda x: sum(x),
+            'avg': lambda x: int(sum(x)/len(x))
+        }
