@@ -31,8 +31,8 @@ class DataFrame:
         return l
 
     @classmethod
-    def from_array(cls, arr, cols):
-        return cls({c: list(a) for c, a in zip(cols, zip(*arr))}, cols)
+    def from_array(cls, arr, columns):
+        return cls({c: list(a) for c, a in zip(columns, zip(*arr))}, columns)
 
     def filter_columns(self, cols):
         return DataFrame(self.data_dict, cols)
@@ -237,3 +237,9 @@ class DataFrame:
             'sum': lambda x: sum(x),
             'avg': lambda x: int(sum(x)/len(x))
         }
+
+    def query(self, query):
+        # This is naive
+        tokens = [x.strip(",") for x in query.split(" ")]
+        if tokens[0] == "SELECT":
+            return self.select(tokens[1:])
