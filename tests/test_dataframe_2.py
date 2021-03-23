@@ -62,10 +62,10 @@ do_assert("aggregate sum", df.group_by('name').aggregate('score', 'sum').to_arra
 
 do_assert("aggregate avg", df.group_by('name').aggregate('score', 'avg').to_array(),
 [
-    ['Kevin Fray', [52, 53], 90],
-    ['Charles Trapp', [52, 53], 85],
-    ['Anna Smith', [52, 53, 54], 70],
-    ['Sylvia Mendez', [52, 53, 54], 90],
+    ['Kevin Fray', [52, 53], 90.0],
+    ['Charles Trapp', [52, 53], 85.0],
+    ['Anna Smith', [52, 53, 54], 70.0],
+    ['Sylvia Mendez', [52, 53, 54], 90.0],
 ])
 
 df = DataFrame.from_array(

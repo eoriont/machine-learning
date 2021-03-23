@@ -225,7 +225,7 @@ class DataFrame:
 
     def aggregate(self, col, method):
         d, c = self.get_data_copies()
-        d[col] = [DataFrame.get_methods()[method](x) for x in self.get_column(col)]
+        d[method+col] = [DataFrame.get_methods()[method](x) for x in self.get_column(col)]
         return DataFrame(d, c)
 
     @staticmethod
@@ -235,7 +235,7 @@ class DataFrame:
             'max': lambda x: max(x),
             'min': lambda x: min(x),
             'sum': lambda x: sum(x),
-            'avg': lambda x: int(sum(x)/len(x))
+            'avg': lambda x: sum(x)/len(x)
         }
 
     def query(self, query):
