@@ -1,4 +1,4 @@
-import sys
+import sys, math
 sys.path.append('src/graphs')
 from weighted_graph import WeightedGraph
 
@@ -24,9 +24,9 @@ class NeuralNetwork(WeightedGraph):
     def calc_gradient(self, data_point):
         i, o = data_point['input'], data_point['output']
         grad = 2 * (self.predict(i) - o[0]) * self.get_act_deriv(2)(o[0])
-        grad *= sum(self.get_act_func(j)(k) for j, k in enumerate(i))
-        return {edge: grad * i[j] for j, edge in enumerate(self.weights)}
-
+        return {
+            (0, 1): grad * self.weights[(1, 2)] *
+        }
     def update_weights(self, data_point, learning_rate=0.01):
         grad = self.calc_gradient(data_point)
         self.weights = {edge: w - learning_rate * grad[edge] for edge, w in self.weights.items()}
@@ -37,3 +37,26 @@ class NeuralNetwork(WeightedGraph):
 
     def get_act_deriv(self, node):
         return self.activation_functions[self.activation_types[node]]['derivative']
+
+if __name__ == "__main__":
+    def linear_function(x):
+        return x
+    def linear_derivative(x):
+        return 1
+    def sigmoidal_function(x):
+        return 1/(1+math.exp(-x))
+    def sigmoidal_derivative(x):
+        s = sigmoidal_function(x)
+        return s * (1 - s)
+    activation_functions = {
+        'linear': {
+            'function': linear_function,
+            'derivative': linear_derivative
+        },
+        'sigmoidal': {
+            'function': sigmoidal_function,
+            'derivative': sigmoidal_derivative
+        }
+    }
+    weights = {(0, 1): 1, (1, 2): 1}
+    nn = NeuralNetwork(weights, ['1', '1', '2'])

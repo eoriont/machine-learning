@@ -239,7 +239,54 @@ class DataFrame:
         }
 
     def query(self, query):
-        # This is naive
-        tokens = [x.strip(",") for x in query.split(" ")]
-        if tokens[0] == "SELECT":
-            return self.select(tokens[1:])
+        tokens = query.split(" ")
+
+        todo = {'select': [], 'order': []}
+        i = iter(tokens)
+        for t in i:
+            if t == "SELECT":
+                while True:
+                    x = next(i)
+                    todo["select"].append(x.strip(","))
+                    if x[-1] != ",": break
+            elif t == "ORDER":
+                by = next(i)
+                if by == "BY":
+                    while True:
+                        col = next(i)
+                        way = next(i)
+                        todo["order"].append((col, way.strip(",")=="ASC"))
+                        if way[-1] != ",": break
+        d, c = self.get_data_copies()
+        df = DataFrame(d, c)
+        for x, y in reversed(todo["order"]):
+            df = df.order_by(x, y)
+        df = df.select(todo["select"])
+        return df
+
+
+
+
+if __name__ == "__main__":
+    df = DataFrame.from_array(
+        [['Kevin', 'Fray', 5],
+        ['Charles', 'Trapp', 17],
+        ['Anna', 'Smith', 13],
+        ['Sylvia', 'Mendez', 9]],
+        columns = ['firstname', 'lastname', 'age']
+    )
+
+    # print(df.query("SELECT lastname, firstname, age ORDER BY age DESC").to_array())
+    # print(df.query("SELECT firstname ORDER BY lastname ASC").to_array())
+    df = DataFrame.from_array(
+        [['Kevin', 'Fray', 5],
+        ['Melvin', 'Fray', 5],
+        ['Charles', 'Trapp', 17],
+        ['Carl', 'Trapp', 17],
+        ['Anna', 'Smith', 13],
+        ['Hannah', 'Smith', 13],
+        ['Sylvia', 'Mendez', 9],
+        ['Cynthia', 'Mendez', 9]],
+        columns = ['firstname', 'lastname', 'age']
+    )
+    print(df.query("SELECT lastname, firstname, age ORDER BY age ASC, firstname DESC").to_array())
