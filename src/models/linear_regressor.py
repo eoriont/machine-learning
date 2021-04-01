@@ -12,7 +12,7 @@ class LinearRegressor:
         y_data = [self.prediction_column]
         X, Y = ~Matrix(x_data), ~Matrix(y_data)
         result = (~X @ X).inverse() @ (~X @ Y)
-        return {key: val for key, val in zip(self.df.columns, result[:, 0])}
+        return {key: val for key, val in zip(self.df.columns, (~result).get((0, slice(None)), False)[0])}
 
     def gather_all_inputs(self, terms):
         to_calc = [x.split("_") for x in self.df.columns if '_' in x]
