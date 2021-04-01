@@ -6,9 +6,10 @@ plt.style.use("bmh")
 
 
 class LogisticRegressor(LinearRegressor):
-    def __init__(self, df, dependent_variable, max_value=1):
+    def __init__(self, df, dependent_variable, max_value=1, solve_immediately=True):
         self.max_value = max_value
-        df = df.apply(dependent_variable, self.transform)
+        if solve_immediately:
+            df = df.apply(dependent_variable, self.transform)
         super().__init__(df, dependent_variable)
 
     def transform(self, x):

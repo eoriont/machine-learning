@@ -38,7 +38,9 @@ for o in offsets:
     y_vals = [lr.predict({"x": i}) for i in x_vals]
     plt.plot(x_vals, y_vals)
 
-plt.legend(offsets)
+plt.plot(df.get_column('x'), df.get_column('y'))
+
+plt.legend(offsets+["data"])
 plt.savefig("assignment_109a.png")
 
 #> Part B
@@ -54,7 +56,7 @@ df = DataFrame.from_array(
 columns = ['x', 'y'])
 df = df.apply_new("x", "constant", lambda _: 1)
 
-reg = LogisticRegressor(df, dependent_variable='y')
+reg = LogisticRegressor(df, dependent_variable='y', solve_immediately=False)
 
 reg.set_coefficients({'constant': 0.5, 'x': 0.5})
 
@@ -70,6 +72,8 @@ reg.set_coefficients({'constant': 2.7911, 'x': -1.1165})
 x_vals = [i for i in range(100)]
 y_vals = [reg.predict({"x": i, "constant": 1}) for i in x_vals]
 plt.plot(x_vals, y_vals)
+
+plt.plot(df.get_column('x'), df.get_column('y'))
 
 plt.legend(["Gradient Descent"])
 plt.title("Gradient Descent Plot")
