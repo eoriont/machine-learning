@@ -27,11 +27,15 @@ class KMeans:
         self.update_cluster_centers()
 
     def get_closest_cluster(self, row):
-        distances = {
+        distances = self.get_cluster_distances(row)
+        return min(distances, key=distances.get)
+
+    def get_cluster_distances(self, row):
+        return {
             cluster_id: (sum((val-center)**2 for val, center in zip(row, cluster_center)))
             for cluster_id, cluster_center in self.centers.items()
         }
-        return min(distances, key=distances.get)
+
 
     def update_cluster_centers(self):
         self.centers = {
@@ -41,3 +45,11 @@ class KMeans:
             ]
             for cluster_index, cluster in self.clusters.items()
         }
+
+    def get_cluster_squared_errors(self):
+        self.update_cluster_centers()
+        return sum(
+            self.get_cluster_distances(self.data[row])[cluster_id]
+            for cluster_id, cluster in self.clusters.items()
+            for row in cluster
+        )
