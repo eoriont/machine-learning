@@ -23,11 +23,6 @@ data = [[0.14, 0.14, 0.28, 0.44],
 
 sum_squared_errors = []
 for k_value in range(1, 6):
-    # Populate initial clusters
-    initial_clusters = {i: [] for i in range(k_value)}
-    for i in range(len(data)):
-        initial_clusters[i%k_value].append(i)
-
     # Fit kmeans model
     kmeans = KMeans(n_clusters=k_value)
     kmeans.fit(data)
